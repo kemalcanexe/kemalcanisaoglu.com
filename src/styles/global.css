@@ -85,7 +85,7 @@ ul, ol { padding: 0; list-style: none; }
 .mark { display: flex; align-items: center; gap: 12px; text-decoration: none; justify-self: start; }
 /* a miniature of the console screen: types and erases */
 .mark-scr {
-  display: inline-flex; align-items: center; gap: 3px; height: 34px; min-width: 86px; padding: 0 10px;
+  display: inline-flex; align-items: center; gap: 3px; height: 34px; min-width: 100px; padding: 0 10px;
   border-radius: 8px; background: linear-gradient(180deg, #0d0d0e, #19191a);
   box-shadow: 0 0 0 2px #3a3a3d, 0 0 0 3px #1b1b1d, inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.45);
   font-family: var(--mono); font-weight: 700; font-size: 16px; line-height: 1; color: var(--cream);
@@ -147,7 +147,7 @@ main, .foot { position: relative; z-index: 1; }
 /* ───────── console ───────── */
 .console {
   --rx: 0deg; --ry: 0deg;
-  --cw: min(1640px, 116vw, max(760px, (100svh - 205px) * 1.716));
+  --cw: min(1640px, 116vw, max(760px, (100svh - 235px) * 1.716));
   position: relative; width: var(--cw); max-width: none;
   margin: calc(var(--cw) * -0.035) calc((100% - var(--cw)) / 2) calc(var(--cw) * -0.045);
   aspect-ratio: 1536 / 1024; container-type: inline-size; perspective: 1400px;
@@ -538,3 +538,27 @@ main, .foot { position: relative; z-index: 1; }
 .tl-more, .foot a { display: inline-flex; align-items: center; min-height: 44px; }
 .email { display: inline-flex; align-items: center; min-height: 44px; }
 .sheet { overscroll-behavior: contain; }
+
+/* proof line under the hero */
+.hero-stats {
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 0; margin-top: 14px;
+  font-family: var(--mono); font-size: 0.8125rem; letter-spacing: 0.02em; color: var(--muted);
+}
+.hero-stats li { display: flex; align-items: center; }
+.hero-stats li + li::before { content: ''; width: 4px; height: 4px; margin: 0 14px; border-radius: 1px; background: var(--orange); }
+.hero-stats b { color: var(--cream); font-weight: 700; margin-right: 0.45em; }
+@media (max-width: 480px) {
+  .hero-stats { flex-direction: column; align-items: center; gap: 2px; }
+  .hero-stats li + li::before { display: none; }
+}
+
+/* timeline rail in each role's keycap colour */
+.tl-body { border-left: 2px solid var(--face, var(--line-2)); padding-left: 20px; }
+@media (max-width: 760px) {
+  .tl-item { position: relative; padding-left: 16px; }
+  .tl-item::before { content: ''; position: absolute; left: 0; top: 22px; bottom: 22px; width: 2px; border-radius: 1px; background: var(--face, var(--line-2)); }
+  .tl-body { border-left: 0; padding-left: 0; }
+  /* phones: the first two bullets, the rest behind "Details" */
+  .tl-item.deep .tl-points li:nth-child(n + 3) { display: none; }
+}
+@media (max-width: 760px) { .top { background: rgba(17, 17, 19, 0.97); } }

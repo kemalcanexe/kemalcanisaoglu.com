@@ -29,7 +29,8 @@ export interface KeyText { label: string; screen: string; desc: string }
 interface Dict {
   meta: { title: string; description: string; ogAlt: string };
   nav: { work: string; about: string; experience: string; contact: string; talk: string; sound: string; soundOn: string; soundOff: string; lang: string; langHref: string; langLabel: string; skip: string; menu: string; role: string };
-  hero: { name: string; sub: string };
+  hero: { name: string; sub: string; stats: { n: string; label: string }[] };
+  marks: { work: string; experience: string; contact: string };
   screen: { meta: string; title: string; desc: string; typing: string; ready: string; prompt: string; hint: string };
   device: { label: string };
   work: {
@@ -61,7 +62,9 @@ const en: Dict = {
   hero: {
     name: 'Kemal Can İsaoğlu',
     sub: 'Product management intern at Insider One, building data and integration products. Founder of Portakasa.',
+    stats: [{ n: '25+', label: 'Jira tasks' }, { n: '20+', label: 'help-center updates' }, { n: '7', label: 'AI automations' }],
   },
+  marks: { work: 'work', experience: 'exp', contact: 'hello' },
   screen: {
     meta: 'KEMAL CAN / PRODUCT INDEX',
     title: 'Kemal’s console',
@@ -374,7 +377,9 @@ const tr: Dict = {
   hero: {
     name: 'Kemal Can İsaoğlu',
     sub: 'Insider One’da veri ve entegrasyon ürünleri geliştiren ürün yönetimi stajyeri. Portakasa’nın kurucusu.',
+    stats: [{ n: '25+', label: 'Jira görevi' }, { n: '20+', label: 'yardım merkezi güncellemesi' }, { n: '7', label: 'yapay zekâ otomasyonu' }],
   },
+  marks: { work: 'işler', experience: 'deneyim', contact: 'merhaba' },
   screen: {
     meta: 'KEMAL CAN / ÜRÜN DİZİNİ',
     title: 'Kemal’in konsolu',

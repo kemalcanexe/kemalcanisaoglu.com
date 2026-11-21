@@ -485,24 +485,41 @@ window.addEventListener('scroll', () => {
 /* ───────── logo: mini screen that types and erases ───────── */
 const markEl = $('[data-mark]');
 if (markEl && !reduced) {
-  const words = ['KCİ', 'kemal'];
-  let w = 0;
+  const marks: Record<string, string> = JSON.parse(markEl.dataset.marks || '{}');
+  const cycle = ['KCİ', 'kemal'];
+  let ci = 0;
+  let section = ''; // '' = hero, otherwise the section in view
+  const ids: Record<string, string> = { work: 'work', experience: 'experience', contact: 'contact' };
+  if ('IntersectionObserver' in window) {
+    const seen = new Map<string, boolean>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => seen.set(en.target.id, en.isIntersecting));
+      section = ['contact', 'experience', 'work'].find((k) => seen.get(ids[k])) || '';
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    Object.values(ids).forEach((id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
   const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
   const visible = () => new Promise<void>((r) => {
     if (!document.hidden) return r();
     document.addEventListener('visibilitychange', function f() { if (!document.hidden) { document.removeEventListener('visibilitychange', f); r(); } });
   });
+  let shown = markEl.textContent || '';
+  const swap = async (next: string) => {
+    for (let i = Array.from(shown).length; i >= 0; i--) { markEl.textContent = Array.from(shown).slice(0, i).join(''); await wait(55); }
+    await wait(200);
+    const n = Array.from(next);
+    for (let i = 1; i <= n.length; i++) { markEl.textContent = n.slice(0, i).join(''); await wait(95); }
+    shown = next;
+  };
   (async () => {
     await wait(2600);
+    let since = performance.now();
     for (;;) {
-      const cur = Array.from(words[w]);
-      for (let i = cur.length; i >= 0; i--) { markEl.textContent = cur.slice(0, i).join(''); await wait(70); }
-      await wait(380);
-      w = (w + 1) % words.length;
-      const next = Array.from(words[w]);
-      for (let i = 1; i <= next.length; i++) { markEl.textContent = next.slice(0, i).join(''); await wait(120); }
-      await wait(3200);
       await visible();
+      const want = section ? marks[section] : cycle[ci];
+      if (want && want !== shown) { await swap(want); since = performance.now(); }
+      else if (!section && performance.now() - since > 3200) { ci = (ci + 1) % cycle.length; }
+      await wait(250);
     }
   })();
 }
