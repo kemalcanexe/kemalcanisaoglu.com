@@ -149,9 +149,12 @@ let openDlg: HTMLDialogElement | null = null;
 let opener: HTMLElement | null = null;
 
 let pushed = false; // true while the open dialog owns a history entry we added
+let backPending = false; // a history.back() we issued has not landed yet
+let queued: (() => void) | null = null;
 const openDialog = (id: string, from?: HTMLElement | null, fromHistory = false) => {
   const d = document.getElementById(`d-${id}`) as HTMLDialogElement | null;
   if (!d) return;
+  if (backPending) { const f = from ?? (document.activeElement as HTMLElement | null); queued = () => openDialog(id, f, fromHistory); return; }
   if (openDlg && openDlg !== d) openDlg.close();
   opener = from ?? (document.activeElement as HTMLElement | null);
   d.classList.remove('closing');
@@ -184,7 +187,7 @@ $$<HTMLDialogElement>('dialog[data-dialog]').forEach((d) => {
   d.addEventListener('close', () => {
     if (openDlg === d) openDlg = null;
     try {
-      if (pushed) { pushed = false; history.back(); }
+      if (pushed) { pushed = false; backPending = true; history.back(); }
       else if (location.hash) history.replaceState(null, '', location.pathname + location.search);
     } catch {}
     const o = opener; opener = null;
@@ -238,6 +241,7 @@ document.addEventListener('click', (e) => {
 
 /* Back/forward and manual hash changes open or close the matching dialog */
 window.addEventListener('popstate', () => {
+  if (backPending) { backPending = false; const q = queued; queued = null; q?.(); return; }
   const id = location.hash.slice(1);
   if (id && document.getElementById(`d-${id}`)) {
     if (openDlg?.id !== `d-${id}`) openDialog(id, null, true);
