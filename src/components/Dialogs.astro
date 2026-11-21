@@ -37,7 +37,7 @@ const keyOf = (id: KeyId) => KEYS.find((k) => k.id === id)!;
               <ul>{b.items.map((it) => <li>{it}</li>)}</ul>
             </section>
           ))}
-          {m.tags && <ul class="tags" aria-label="Tags">{m.tags.map((tg) => <li>{tg}</li>)}</ul>}
+          {m.tags && <ul class="tags" aria-label={lang === 'en' ? 'Topics' : 'Konular'}>{m.tags.map((tg) => <li>{tg}</li>)}</ul>}
           {m.links && (
             <div class="sheet-links">
               {m.links.map((l) => (

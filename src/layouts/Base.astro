@@ -3,6 +3,8 @@ import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource/courier-prime/400.css';
 import '@fontsource/courier-prime/700.css';
 import '../styles/global.css';
+import bricoUrl from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import monoUrl from '@fontsource/courier-prime/files/courier-prime-latin-700-normal.woff2?url';
 import { dict, LINKS, type Lang } from '../i18n/content';
 
 interface Props { lang: Lang }
@@ -38,6 +40,8 @@ const jsonLd = {
     <link rel="alternate" hreflang="en" href={`${site}/`} />
     <link rel="alternate" hreflang="tr" href={`${site}/tr/`} />
     <link rel="alternate" hreflang="x-default" href={`${site}/`} />
+    <link rel="preload" href={bricoUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={monoUrl} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:type" content="profile" />

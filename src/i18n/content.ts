@@ -67,7 +67,7 @@ const en: Dict = {
     title: 'Kemal’s console',
     desc: 'Integrations, data and a startup of my own',
     typing: 'TYPING', ready: 'READY',
-    prompt: 'type a command', hint: 'type help',
+    prompt: 'type a command', hint: 'type help…',
   },
   device: { label: 'Portfolio console. Each key opens a section.' },
   work: {
@@ -380,7 +380,7 @@ const tr: Dict = {
     title: 'Kemal’in konsolu',
     desc: 'Entegrasyonlar, veri ve kendi girişimim',
     typing: 'YAZIYOR', ready: 'HAZIR',
-    prompt: 'bir komut yazın', hint: 'help yazın',
+    prompt: 'bir komut yazın', hint: 'help yazın…',
   },
   device: { label: 'Portfolyo konsolu. Her tuş bir bölüm açar.' },
   work: {

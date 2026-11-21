@@ -148,7 +148,8 @@ const buzz = () => {
 let openDlg: HTMLDialogElement | null = null;
 let opener: HTMLElement | null = null;
 
-const openDialog = (id: string, from?: HTMLElement | null) => {
+let pushed = false; // true while the open dialog owns a history entry we added
+const openDialog = (id: string, from?: HTMLElement | null, fromHistory = false) => {
   const d = document.getElementById(`d-${id}`) as HTMLDialogElement | null;
   if (!d) return;
   if (openDlg && openDlg !== d) openDlg.close();
@@ -158,7 +159,11 @@ const openDialog = (id: string, from?: HTMLElement | null) => {
   d.showModal();
   openDlg = d;
   d.querySelector<HTMLElement>('.sheet-body')?.scrollTo(0, 0);
-  try { history.replaceState(null, '', `#${id}`); } catch {}
+  try {
+    if (fromHistory) pushed = false;
+    else if (pushed) history.replaceState({ dlg: id }, '', `#${id}`);
+    else { history.pushState({ dlg: id }, '', `#${id}`); pushed = true; }
+  } catch {}
   track('open_section', { section: id, lang });
 };
 
@@ -178,7 +183,10 @@ $$<HTMLDialogElement>('dialog[data-dialog]').forEach((d) => {
   d.querySelector('[data-close]')?.addEventListener('click', () => closeDialog(d));
   d.addEventListener('close', () => {
     if (openDlg === d) openDlg = null;
-    try { history.replaceState(null, '', location.pathname); } catch {}
+    try {
+      if (pushed) { pushed = false; history.back(); }
+      else if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    } catch {}
     const o = opener; opener = null;
     if (o && document.contains(o)) o.focus({ preventScroll: true });
     scheduleRestore();
@@ -222,8 +230,21 @@ $$<HTMLDialogElement>('dialog[data-dialog]').forEach((d) => {
 document.addEventListener('click', (e) => {
   const el = (e.target as Element).closest<HTMLElement>('[data-open]');
   if (!el || !el.dataset.open) return;
+  const me = e as MouseEvent;
+  if (el.tagName === 'A' && (me.metaKey || me.ctrlKey || me.shiftKey || me.altKey || me.button !== 0)) return; // let new-tab clicks through
   e.preventDefault();
   openDialog(el.dataset.open, el);
+});
+
+/* Back/forward and manual hash changes open or close the matching dialog */
+window.addEventListener('popstate', () => {
+  const id = location.hash.slice(1);
+  if (id && document.getElementById(`d-${id}`)) {
+    if (openDlg?.id !== `d-${id}`) openDialog(id, null, true);
+  } else if (openDlg) {
+    pushed = false;
+    closeDialog(openDlg);
+  }
 });
 
 /* ───────── keys ───────── */
@@ -499,7 +520,7 @@ const boot = () => {
   setInterval(wave, 7000);
 
   const hash = location.hash.slice(1);
-  if (hash && document.getElementById(`d-${hash}`)) setTimeout(() => openDialog(hash, null), 300);
+  if (hash && document.getElementById(`d-${hash}`)) setTimeout(() => openDialog(hash, null, true), 300);
 };
 const img = consoleEl?.querySelector('img');
 if (img && !img.complete) {
