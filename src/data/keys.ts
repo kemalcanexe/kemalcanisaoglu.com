@@ -12,6 +12,8 @@ export interface KeyDef {
   /** legend colour on the shaded front wall */
   legend: string;
   size: 'lg' | 'sm' | 'bar';
+  /** where the rendered cap sits in the photo: x, y, w, h in image px */
+  box: [number, number, number, number];
   shortcut: string;
   href?: string;
   download?: boolean;
@@ -22,22 +24,22 @@ const brown = '#40150E';
 const cream = '#FDE3CF';
 
 export const KEYS: KeyDef[] = [
-  { id: 'insider',   cx: 379,  cy: 590, w: 156, h: 130, face: '#FDE3CF', edge: '#CAA58A', ink: '#66271B', legend: '#4a1b10', size: 'lg', shortcut: '1' },
-  { id: 'portakasa', cx: 580,  cy: 580, w: 156, h: 130, face: '#EC6426', edge: '#AD4017', ink: brown, legend: '#fff1e6', size: 'lg', shortcut: '2' },
-  { id: 'icron',     cx: 782,  cy: 570, w: 156, h: 130, face: '#F8A91F', edge: '#BC7512', ink: brown, legend: '#2e1606', size: 'lg', shortcut: '3' },
-  { id: 'ai',        cx: 982,  cy: 559, w: 156, h: 130, face: '#2E573A', edge: '#193A23', ink: cream, legend: '#f6ead9', size: 'lg', shortcut: '4' },
-  { id: 'about',     cx: 1184, cy: 548, w: 156, h: 130, face: '#72AC43', edge: '#487A26', ink: '#1E330F', legend: '#ffffff', size: 'lg', shortcut: '5' },
-  { id: 'education', cx: 355,  cy: 783, w: 98,  h: 108, face: '#E4A5CA', edge: '#B76F9B', ink: brown, legend: '#34101f', size: 'sm', shortcut: '6' },
-  { id: 'leadership',cx: 479,  cy: 776, w: 98,  h: 108, face: '#66271B', edge: '#40150E', ink: cream, legend: '#fde3cf', size: 'sm', shortcut: '7' },
-  { id: 'skills',    cx: 602,  cy: 770, w: 98,  h: 108, face: '#EC6426', edge: '#AD4017', ink: brown, legend: '#fff1e6', size: 'sm', shortcut: '8' },
-  { id: 'cv',        cx: 728,  cy: 763, w: 98,  h: 108, face: '#F8A91F', edge: '#BC7512', ink: brown, legend: '#2e1606', size: 'sm', shortcut: '9', href: LINKS.cv, download: true },
-  { id: 'linkedin',  cx: 852,  cy: 756, w: 98,  h: 108, face: '#E4A5CA', edge: '#B76F9B', ink: brown, legend: '#34101f', size: 'sm', shortcut: '0', href: LINKS.linkedin, external: true },
-  { id: 'contact',   cx: 1135, cy: 745, w: 374, h: 112, face: '#252525', edge: '#101010', ink: '#FFFFFF', legend: '#f2f2f2', size: 'bar', shortcut: '↵' },
+  { id: 'insider', box: [274,477,219,204],   cx: 379,  cy: 590, w: 156, h: 130, face: '#FDE3CF', edge: '#CAA58A', ink: '#66271B', legend: '#4a1b10', size: 'lg', shortcut: '1' },
+  { id: 'portakasa', box: [476,468,220,205], cx: 580,  cy: 580, w: 156, h: 130, face: '#EC6426', edge: '#AD4017', ink: brown, legend: '#fff1e6', size: 'lg', shortcut: '2' },
+  { id: 'icron', box: [678,459,221,203],     cx: 782,  cy: 570, w: 156, h: 130, face: '#F8A91F', edge: '#BC7512', ink: brown, legend: '#2e1606', size: 'lg', shortcut: '3' },
+  { id: 'ai', box: [879,449,218,204],        cx: 982,  cy: 559, w: 156, h: 130, face: '#2E573A', edge: '#193A23', ink: cream, legend: '#f6ead9', size: 'lg', shortcut: '4' },
+  { id: 'about', box: [1081,438,225,206],     cx: 1184, cy: 548, w: 156, h: 130, face: '#72AC43', edge: '#487A26', ink: '#1E330F', legend: '#ffffff', size: 'lg', shortcut: '5' },
+  { id: 'education', box: [276,677,165,193], cx: 355,  cy: 783, w: 98,  h: 108, face: '#E4A5CA', edge: '#B76F9B', ink: brown, legend: '#34101f', size: 'sm', shortcut: '6' },
+  { id: 'leadership', box: [400,671,164,192],cx: 479,  cy: 776, w: 98,  h: 108, face: '#66271B', edge: '#40150E', ink: cream, legend: '#fde3cf', size: 'sm', shortcut: '7' },
+  { id: 'skills', box: [524,666,163,191],    cx: 602,  cy: 770, w: 98,  h: 108, face: '#EC6426', edge: '#AD4017', ink: brown, legend: '#fff1e6', size: 'sm', shortcut: '8' },
+  { id: 'cv', box: [648,661,163,191],        cx: 728,  cy: 763, w: 98,  h: 108, face: '#F8A91F', edge: '#BC7512', ink: brown, legend: '#2e1606', size: 'sm', shortcut: '9', href: LINKS.cv, download: true },
+  { id: 'linkedin', box: [771,655,165,192],  cx: 852,  cy: 756, w: 98,  h: 108, face: '#E4A5CA', edge: '#B76F9B', ink: brown, legend: '#34101f', size: 'sm', shortcut: '0', href: LINKS.linkedin, external: true },
+  { id: 'contact', box: [905,634,467,207],   cx: 1135, cy: 745, w: 374, h: 112, face: '#252525', edge: '#101010', ink: '#FFFFFF', legend: '#f2f2f2', size: 'bar', shortcut: '↵' },
 ];
 
 export const pct = (k: KeyDef) => ({
-  left: ((k.cx - k.w / 2) / IMG_W) * 100,
-  top: ((k.cy - k.h / 2) / IMG_H) * 100,
-  width: (k.w / IMG_W) * 100,
-  height: (k.h / IMG_H) * 100,
+  left: (k.box[0] / IMG_W) * 100,
+  top: (k.box[1] / IMG_H) * 100,
+  width: (k.box[2] / IMG_W) * 100,
+  height: (k.box[3] / IMG_H) * 100,
 });

@@ -1,0 +1,137 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>body{margin:0;background:transparent}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+
+const P = window.PARAMS;
+for (const [u, r] of [['brico.woff2', undefined], ['brico-x.woff2', 'U+0100-024F']]) {
+  const f = new FontFace('B', `url(${u})`, r ? { weight: '200 800', unicodeRange: r } : { weight: '200 800' }); await f.load(); document.fonts.add(f);
+}
+RectAreaLightUniformsLib.init();
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = P.exposure;
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.setClearColor(0, 0);
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.VSMShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = P.env;
+
+// big soft key light upper-left / slightly behind (matches the case's highlights) + cool strip rim + faint fill
+const L = P.light;
+const key = new THREE.RectAreaLight(0xfff3e8, L.key, 260, 260); key.position.set(-260, 320, -120); key.lookAt(0, 0, 0); scene.add(key);
+const rim = new THREE.RectAreaLight(0xe9f0ff, L.rim, 400, 40); rim.position.set(-60, 220, -320); rim.lookAt(0, 0, 0); scene.add(rim);
+const fill = new THREE.RectAreaLight(0xdfe6ff, L.fill, 300, 300); fill.position.set(320, 160, 260); fill.lookAt(0, 0, 0); scene.add(fill);
+// shadow-casting light, same direction as the key light
+const sh = new THREE.DirectionalLight(0xffffff, L.shadowLight); sh.position.set(-260, 320, -120); sh.castShadow = true;
+sh.shadow.mapSize.set(2048, 2048); sh.shadow.radius = 14; sh.shadow.blurSamples = 24; sh.shadow.bias = -0.0005;
+const sc = sh.shadow.camera; sc.left = -120; sc.right = 120; sc.top = 120; sc.bottom = -120; sc.near = 1; sc.far = 1200; scene.add(sh);
+// shadow catcher at the well floor (only the shadow is rendered)
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), new THREE.ShadowMaterial({ opacity: P.shadowOpacity }));
+floor.rotation.x = -Math.PI / 2; floor.position.y = P.floorY; floor.receiveShadow = true; scene.add(floor);
+
+/* ---- cap geometry (lofted, cylindrical dish, filleted top edge, AO baked in vertex colours) ---- */
+function rrect(w, d, r, n = 12) {
+  const pts = []; const hw = w / 2, hd = d / 2; r = Math.min(r, hw - .01, hd - .01);
+  const cs = [[hw - r, hd - r, 0], [-hw + r, hd - r, Math.PI / 2], [-hw + r, -hd + r, Math.PI], [hw - r, -hd + r, 1.5 * Math.PI]];
+  for (const [cx, cz, a0] of cs) for (let i = 0; i <= n; i++) { const a = a0 + (i / n) * Math.PI / 2; pts.push([cx + r * Math.cos(a), cz + r * Math.sin(a)]); }
+  pts.push([...pts[0]]); return pts;
+}
+function cap(W, D, o) {
+  const N = rrect(1, 1, .1).length;
+  const ts = [0, .1, .25, .42, .58, .72, .82, .89, .935, .965, .985, 1];
+  const rings = [];
+  for (const t of ts) {
+    const f = Math.max(0, (t - .82) / .18); const fil = (1 - Math.sqrt(Math.max(0, 1 - f * f))) * o.fillet;
+    const e = t;
+    const w = o.W - 2 * (o.tx * e + fil), dF = o.tf * e + fil, dB = o.tb * e + fil;
+    const d = o.D - dF - dB, zoff = (dB - dF) / 2;
+    const y = o.h * (t <= .82 ? t : .82 + (1 - .82) * Math.sin(f * Math.PI / 2));
+    rings.push(rrect(w, d, o.rb + (o.rt - o.rb) * t).map(([x, z]) => [x, y, z + zoff]));
+  }
+  const pos = [], uv = [], col = [], idx = [];
+  for (let j = 0; j < rings.length; j++) for (let i = 0; i < N; i++) {
+    const p = rings[j][i]; pos.push(...p); uv.push(i / (N - 1), j / (rings.length - 1));
+    const ao = 1 - o.ao * Math.pow(1 - p[1] / o.h, 2.2); col.push(ao, ao, ao);
+  }
+  for (let j = 0; j < rings.length - 1; j++) for (let i = 0; i < N - 1; i++) { const a = j * N + i, b = a + 1, c = a + N, d = c + 1; idx.push(a, c, b, b, c, d); }
+  const wallCount = idx.length;
+  const top = rings[rings.length - 1], base = pos.length / 3, topY = top[0][1];
+  let cx = 0, cz = 0; top.forEach(p => { cx += p[0]; cz += p[2]; }); cx /= N; cz /= N;
+  const hw = Math.max(...top.map(p => Math.abs(p[0] - cx))), hd = Math.max(...top.map(p => Math.abs(p[2] - cz)));
+  const S = [1, .96, .9, .8, .68, .55, .42, .3, .18, .08, 0];
+  for (const s of S) for (let i = 0; i < N; i++) {
+    const x = cx + (top[i][0] - cx) * s, z = cz + (top[i][2] - cz) * s; const nx = (x - cx) / hw;
+    pos.push(x, topY - (s < 1 ? o.dish * (1 - nx * nx) * Math.min(1, (1 - s) * 6) : 0), z);
+    uv.push((x - cx) / (2 * hw) + .5, .5 - (z - cz) / (2 * hd)); col.push(1, 1, 1);
+  }
+  for (let j = 0; j < S.length - 1; j++) for (let i = 0; i < N - 1; i++) { const a = base + j * N + i, b = a + 1, c = a + N, d = c + 1; idx.push(a, c, b, b, c, d); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setIndex(idx); g.computeVertexNormals();
+  g.addGroup(0, wallCount, 0); g.addGroup(wallCount, idx.length - wallCount, 1);
+  return { g, aspect: hw / hd };
+}
+async function svgImage(svg, color) {
+  const s = svg.replace(/currentColor/g, color).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s); await img.decode(); return img;
+}
+function noise(size, base, amt) {
+  const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d'); const id = x.createImageData(size, size);
+  for (let i = 0; i < id.data.length; i += 4) { const v = base + (Math.random() - .5) * amt; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; }
+  x.putImageData(id, 0, 0); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t;
+}
+async function topTex(k, aspect) {
+  const H = 1024, W = Math.round(H * aspect); const c = document.createElement('canvas'); c.width = W; c.height = H; const x = c.getContext('2d');
+  x.fillStyle = k.face; x.fillRect(0, 0, W, H); x.globalAlpha = .9; x.fillStyle = k.ink;
+  const fit = (txt, fs, maxW) => { x.font = `600 ${fs}px B`; while (x.measureText(txt).width > maxW && fs > 30) { fs -= 4; x.font = `600 ${fs}px B`; } return fs; };
+  if (k.wide) {
+    const img = await svgImage(k.icon, k.ink); const s = H * .4; x.drawImage(img, W * .06, (H - s) / 2, s, s);
+    fit(k.label, H * (k.mobile ? .4 : .3), W * .6); x.textAlign = 'right'; x.textBaseline = 'middle'; x.fillText(k.label, W * .94, H * .53);
+  } else if (k.mobile) {
+    const img = await svgImage(k.icon, k.ink); const s = H * .3; x.drawImage(img, (W - s) / 2, H * .1, s, s);
+    fit(k.label, H * .3, W * .92); x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.fillText(k.label, W / 2, H * .82);
+  } else {
+    const img = await svgImage(k.icon, k.ink); const s = Math.min(W, H) * .42; x.drawImage(img, (W - s) / 2, H * .15, s, s);
+    fit(k.label, H * .15, W * .86); x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.fillText(k.label, W / 2, H * .84);
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 16; return t;
+}
+
+/* ---- camera from the solved photo geometry ---- */
+const C = P.camera;
+const cam = new THREE.PerspectiveCamera(C.fov, C.width / C.height, 5, 5000);
+cam.matrixAutoUpdate = false; cam.matrix.fromArray(C.matrixWorld); cam.matrixWorld.copy(cam.matrix); cam.matrixWorldInverse.copy(cam.matrixWorld).invert();
+if (C.cx !== undefined) { // principal point offset
+  cam.setViewOffset(C.width, C.height, 0, 0, C.width, C.height);
+}
+cam.updateProjectionMatrix();
+
+window.renderKey = async (k) => {
+  const { g, aspect } = cap(k.W, k.D, { W: k.W, D: k.D, h: k.h, tx: k.tx, tf: k.tf, tb: k.tb, rb: k.rb, rt: k.rt, fillet: k.fillet, dish: k.dish, ao: P.ao });
+  const common = { roughness: P.rough, roughnessMap: noise(256, 160, 70), bumpMap: noise(512, 128, 255), bumpScale: P.bump, metalness: 0,
+    sheen: .3, sheenRoughness: .9, sheenColor: new THREE.Color(0xcfd6e0), specularIntensity: P.spec, vertexColors: true };
+  common.roughnessMap.repeat.set(4, 4); common.bumpMap.repeat.set(3, 3);
+  const mats = [new THREE.MeshPhysicalMaterial({ color: new THREE.Color(k.face), ...common }), new THREE.MeshPhysicalMaterial({ map: await topTex(k, aspect), ...common })];
+  const m = new THREE.Mesh(g, mats); m.castShadow = true;
+  m.position.set(k.x, k.y0, k.z); m.rotation.y = k.yaw || 0; scene.add(m);
+  // render only this key's bounding box (in photo pixels, at `scale`)
+  const sc = P.scale; const [bx, by, bw, bh] = k.bbox;
+  renderer.setSize(Math.round(bw * sc), Math.round(bh * sc), false);
+  cam.setViewOffset(C.width, C.height, (C.offX || 0) + bx, (C.offY || 0) + by, bw, bh); cam.updateProjectionMatrix();
+  renderer.render(scene, cam);
+  const url = renderer.domElement.toDataURL('image/png');
+  scene.remove(m); g.dispose(); mats.forEach(x => x.dispose());
+  return url;
+};
+// helper: project a world point to photo px with the current camera
+window.project = (x, y, z) => { cam.setViewOffset(C.width, C.height, C.offX || 0, C.offY || 0, C.width, C.height); cam.updateProjectionMatrix(); const v = new THREE.Vector3(x, y, z).project(cam); return [(v.x + 1) / 2 * C.width, (1 - v.y) / 2 * C.height]; };
+window.ready = true;
+</script></body></html>

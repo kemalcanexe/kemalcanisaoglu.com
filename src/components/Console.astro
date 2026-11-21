@@ -9,11 +9,25 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = dict[lang];
 
-// Photoreal keycaps, pre-rendered (tools/keycaps) with the photo's camera and light.
+// Photoreal keycaps: rendered with the photo's solved camera (tools/keycaps), one image per key,
+// plus a phone set with larger legends.
 const capFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/keys/*/*.png', { eager: true });
-const capImg = (id: string) => capFiles[`../assets/keys/${lang}/${id}.png`].default;
-const CAP_W = { lg: [160, 240, 320, 480, 640], sm: [120, 180, 240, 360, 480], bar: [400, 600, 800, 1200, 1600] } as const;
-const CAP_SIZES = { lg: 'min(14vw, 200px)', sm: 'min(9vw, 130px)', bar: 'min(32vw, 460px)' } as const;
+const capSrc = (set: string, id: string) => capFiles[`../assets/keys/${set}/${id}.png`].default;
+const srcset = async (img: ImageMetadata, format: 'avif' | 'webp') => {
+  const widths = [0.5, 1, 1.5, 2].map((f) => Math.round((img.width / 2) * f));
+  const out = await Promise.all(widths.map((w) => getImage({ src: img, width: w, format, quality: 88 })));
+  return out.map((o, i) => `${o.src} ${widths[i]}w`).join(', ');
+};
+const caps = Object.fromEntries(await Promise.all(KEYS.map(async (k) => {
+  const d = capSrc(lang, k.id), m = capSrc(`${lang}-m`, k.id);
+  const fallback = await getImage({ src: d, width: Math.round(d.width / 2), format: 'webp', quality: 88 });
+  return [k.id, {
+    d: { avif: await srcset(d, 'avif'), webp: await srcset(d, 'webp') },
+    m: { avif: await srcset(m, 'avif'), webp: await srcset(m, 'webp') },
+    fallback: fallback.src, w: Math.round(d.width / 2), h: Math.round(d.height / 2),
+    sizes: `(max-width: 640px) ${(k.box[2] / 1536 * 132).toFixed(1)}vw, min(${(k.box[2] / 1536 * 116).toFixed(1)}vw, ${Math.round(k.box[2] / 1536 * 1640)}px)`,
+  }];
+})));
 
 // Low-res alpha copy used only as a mask for the moving light.
 const mask = await getImage({ src: device, width: 640, format: 'webp', quality: 60 });
@@ -67,11 +81,14 @@ const screenData = {
         const label = t.keys[k.id].label;
         const inner = (
           <Fragment>
-            <span class="key-led" aria-hidden="true"></span>
-            <span class="key-shadow" aria-hidden="true"></span>
             <span class="key-cap" aria-hidden="true">
-              <Picture src={capImg(k.id)} formats={['avif', 'webp']} widths={[...CAP_W[k.size]]} sizes={CAP_SIZES[k.size]} quality={90}
-                       alt="" loading="eager" decoding="async" draggable="false" class="key-img" />
+              <picture>
+                <source media="(max-width: 640px)" type="image/avif" srcset={caps[k.id].m.avif} sizes={caps[k.id].sizes} />
+                <source media="(max-width: 640px)" type="image/webp" srcset={caps[k.id].m.webp} sizes={caps[k.id].sizes} />
+                <source type="image/avif" srcset={caps[k.id].d.avif} sizes={caps[k.id].sizes} />
+                <source type="image/webp" srcset={caps[k.id].d.webp} sizes={caps[k.id].sizes} />
+                <img src={caps[k.id].fallback} width={caps[k.id].w} height={caps[k.id].h} alt="" decoding="async" draggable="false" class="key-img" />
+              </picture>
             </span>
           </Fragment>
         );
