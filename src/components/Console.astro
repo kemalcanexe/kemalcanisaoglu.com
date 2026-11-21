@@ -26,7 +26,7 @@ const screenData = {
       formats={['avif', 'webp']}
       quality={78}
       widths={[480, 768, 1024, 1280, 1536]}
-      sizes="(max-width: 640px) 114vw, min(1120px, 92vw)"
+      sizes="(max-width: 640px) 116vw, min(1640px, 116vw)"
       alt=""
       class="device-img"
       loading="eager"
@@ -61,13 +61,15 @@ const screenData = {
         const label = t.keys[k.id].label;
         const inner = (
           <Fragment>
+            <span class="key-stem" aria-hidden="true"></span>
             <span class="key-led" aria-hidden="true"></span>
             <span class="key-cap" aria-hidden="true">
-              <span class="key-face">
+              <span class="key-top">
                 <span class="key-icon" set:html={ICONS[k.id]} />
-                <span class="key-label">{label}</span>
-                {k.size !== 'bar' && <span class="key-hint">{k.shortcut}</span>}
+                {k.size === 'bar' && <span class="key-label">{label}</span>}
               </span>
+              {k.size !== 'bar' && <span class="key-front"><span class="key-label">{label}</span></span>}
+              {k.size !== 'bar' && <span class="key-hint">{k.shortcut}</span>}
             </span>
           </Fragment>
         );

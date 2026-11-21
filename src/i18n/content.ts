@@ -38,7 +38,7 @@ interface Dict {
     insider: { name: string; role: string; when: string; line: string; stats: Stat[]; points: string[]; cta: string };
     portakasa: { name: string; role: string; when: string; line: string; stats: Stat[]; points: string[]; cta: string };
   };
-  timeline: { heading: string; items: { when: string; what: string; where: string; key?: KeyId }[] };
+  timeline: { heading: string; groups: { title: string; items: { when: string; what: string; where: string; place?: string; key?: KeyId; points: string[] }[] }[] };
   contact: { heading: string; text: string; copy: string; copied: string; linkedin: string; cv: string };
   dialog: { close: string; open: string };
   footer: string;
@@ -112,12 +112,61 @@ const en: Dict = {
   },
   timeline: {
     heading: 'Experience',
-    items: [
-      { when: 'Aug 2026 – now', what: 'Founder', where: 'Portakasa', key: 'portakasa' },
-      { when: 'Jul 2026 – now', what: 'Product Management Intern', where: 'Insider One', key: 'insider' },
-      { when: 'Jun 2025 – Jul 2026', what: 'Technical Product Management Intern', where: 'ICRON Technologies', key: 'icron' },
-      { when: 'May 2025 – May 2026', what: 'President, Student Union', where: 'Turkish Education Association', key: 'leadership' },
-      { when: '2022 – 2027', what: 'B.S. Industrial Engineering + Computer Science', where: 'Koç University', key: 'education' },
+    groups: [
+      {
+        title: 'Work',
+        items: [
+          { when: 'Jul 2026 – now', what: 'Product Management Intern', where: 'Insider One', place: 'Remote', key: 'insider', points: [
+            'Manage product work for external integrations: data warehouse import/export, zero-copy data sharing and ad platforms.',
+            'Run discovery and write the product vision for a new ad-platform lead-import integration.',
+            'Triage and prioritise customer requests; wrote 25+ development-ready Jira tasks with acceptance criteria and run UAT before release.',
+            'Analyse Salesforce and Jira data on integration demand, churn and quality to guide the roadmap.',
+            'Prepare go-to-market material: sprint reviews, feature announcements and 20+ help-center updates with Product Education.',
+            'Built 7 AI-assisted workflow automations with Claude Code for ticket triage, release-readiness checks and documentation audits.',
+          ] },
+          { when: 'Aug 2026 – now', what: 'Founder', where: 'Portakasa', place: 'Istanbul', key: 'portakasa', points: [
+            'Founded a pre-accounting SaaS startup and built the product end to end with Claude Code; own discovery, roadmap and delivery.',
+            'Running a development beta with the first customer and shaping the roadmap from their feedback.',
+          ] },
+          { when: 'Jun 2025 – Jul 2026', what: 'Technical Product Management Intern', where: 'ICRON Technologies', place: 'Istanbul', key: 'icron', points: [
+            'Wrote technical design documents, API documentation and UAT plans for the Demand Planning and Workforce Management modules.',
+            'Supported demand forecasting, supply-demand matching and S&OP implementations for Şişecam, Tüpraş and Akbank.',
+            'Defined acceptance criteria and test scenarios; managed engineering and business follow-ups in Azure DevOps.',
+            'Built ForecastTaskGenerator on my own, a forecasting service now in use in the Workforce Management product.',
+          ] },
+        ],
+      },
+      {
+        title: 'Leadership',
+        items: [
+          { when: 'Jun 2023 – May 2026', what: 'President, Student Union', where: 'Turkish Education Association', place: 'Istanbul', key: 'leadership', points: [
+            'Led union strategy and all committees as president (May 2025 – May 2026) after serving as vice president and finance and fundraising board member.',
+          ] },
+          { when: 'May 2023 – Jun 2025', what: 'Head of MarketTalks and External Affairs', where: 'Marketing Club of Koç University', key: 'leadership', points: [
+            'Ran the seminar series end to end, managed sponsor and speaker outreach, and coordinated the Kamp’24 and Kamp’25 operations committees.',
+          ] },
+          { when: 'Oct 2026 – now', what: 'Career Ambassador', where: 'Koç University', key: 'leadership', points: [
+            'Mentor first- and second-year students one-on-one on internship search, CVs and career planning.',
+          ] },
+          { when: 'Sep 2025 – now', what: 'Resident Assistant', where: 'Koç University', key: 'leadership', points: [
+            'Manage floor operations and conflict resolution for undergraduate residents.',
+          ] },
+          { when: 'Jun 2024 – Sep 2025', what: 'Freshman Student Mentor', where: 'Koç University', key: 'leadership', points: [
+            'Guided first-year engineering students through academic planning and campus life.',
+          ] },
+        ],
+      },
+      {
+        title: 'Education',
+        items: [
+          { when: 'Sep 2022 – 2027', what: 'B.S. Industrial Engineering and B.S. Computer Science and Engineering', where: 'Koç University', place: 'Istanbul', key: 'education', points: [
+            'Double major, full merit scholarship. Graduating in 2027.',
+          ] },
+          { when: 'Sep 2018 – Jun 2022', what: 'High School Diploma', where: 'TED Konya College', key: 'education', points: [
+            'Full education scholarship.',
+          ] },
+        ],
+      },
     ],
   },
   contact: {
@@ -385,12 +434,61 @@ const tr: Dict = {
   },
   timeline: {
     heading: 'Deneyim',
-    items: [
-      { when: 'Ağu 2026 – devam', what: 'Kurucu', where: 'Portakasa', key: 'portakasa' },
-      { when: 'Tem 2026 – devam', what: 'Ürün Yönetimi Stajyeri', where: 'Insider One', key: 'insider' },
-      { when: 'Haz 2025 – Tem 2026', what: 'Teknik Ürün Yönetimi Stajyeri', where: 'ICRON Technologies', key: 'icron' },
-      { when: 'May 2025 – May 2026', what: 'Öğrenci Birliği Başkanı', where: 'Türk Eğitim Derneği', key: 'leadership' },
-      { when: '2022 – 2027', what: 'Endüstri + Bilgisayar Mühendisliği (çift anadal)', where: 'Koç Üniversitesi', key: 'education' },
+    groups: [
+      {
+        title: 'İş',
+        items: [
+          { when: 'Tem 2026 – devam', what: 'Ürün Yönetimi Stajyeri', where: 'Insider One', place: 'Uzaktan', key: 'insider', points: [
+            'Dış entegrasyonların ürün işlerini yürütüyorum: veri ambarı içe ve dışa aktarım, sıfır kopya veri paylaşımı ve reklam platformları.',
+            'Yeni bir reklam platformu lead aktarım entegrasyonu için keşfi yürütüyor, ürün vizyonunu yazıyorum.',
+            'Müşteri taleplerini önceliklendiriyorum; kabul kriterleri net 25+ geliştirmeye hazır Jira görevi yazdım, sürümden önce UAT yürütüyorum.',
+            'Yol haritasına yön vermek için entegrasyon talebi, kayıp ve kalite üzerine Salesforce ve Jira verisini analiz ediyorum.',
+            'Ürün Eğitimi ekibiyle pazara çıkış materyallerini hazırlıyorum: sprint değerlendirmeleri, özellik duyuruları ve 20+ yardım merkezi güncellemesi.',
+            'Claude Code ile talep triyajı, sürüm hazırlık kontrolü ve doküman denetimi için 7 yapay zekâ destekli iş akışı otomasyonu kurdum.',
+          ] },
+          { when: 'Ağu 2026 – devam', what: 'Kurucu', where: 'Portakasa', place: 'İstanbul', key: 'portakasa', points: [
+            'Bir ön muhasebe SaaS girişimi kurdum ve ürünü Claude Code ile uçtan uca geliştirdim; keşif, yol haritası ve teslim bende.',
+            'İlk müşteriyle geliştirme betasını yürütüyor, yol haritasını geri bildirimlerine göre şekillendiriyorum.',
+          ] },
+          { when: 'Haz 2025 – Tem 2026', what: 'Teknik Ürün Yönetimi Stajyeri', where: 'ICRON Technologies', place: 'İstanbul', key: 'icron', points: [
+            'Talep Planlama ve İşgücü Yönetimi modülleri için teknik tasarım dokümanları, API dokümantasyonu ve UAT planları yazdım.',
+            'Şişecam, Tüpraş ve Akbank için talep tahmini, arz-talep eşleştirme ve S&OP uygulamalarına destek verdim.',
+            'Kabul kriterleri ve test senaryoları tanımladım; mühendislik ve iş birimi takiplerini Azure DevOps’ta yürüttüm.',
+            'İşgücü Yönetimi ürününde kullanılan tahmin servisi ForecastTaskGenerator’ı tek başıma geliştirdim.',
+          ] },
+        ],
+      },
+      {
+        title: 'Liderlik',
+        items: [
+          { when: 'Haz 2023 – May 2026', what: 'Öğrenci Birliği Başkanı', where: 'Türk Eğitim Derneği', place: 'İstanbul', key: 'leadership', points: [
+            'Başkan yardımcılığı ile finans ve kaynak geliştirme kurulu üyeliğinin ardından başkan olarak (May 2025 – May 2026) birliğin stratejisini ve tüm komitelerini yönettim.',
+          ] },
+          { when: 'May 2023 – Haz 2025', what: 'MarketTalks ve Dış İlişkiler Sorumlusu', where: 'Koç Üniversitesi Pazarlama Kulübü', key: 'leadership', points: [
+            'Seminer serisini baştan sona yürüttüm, sponsor ve konuşmacı iletişimini yönettim, Kamp’24 ve Kamp’25 operasyon komitelerini koordine ettim.',
+          ] },
+          { when: 'Eki 2026 – devam', what: 'Kariyer Elçisi', where: 'Koç Üniversitesi', key: 'leadership', points: [
+            'Birinci ve ikinci sınıf öğrencilerine staj arayışı, CV ve kariyer planlaması üzerine birebir mentorluk yapıyorum.',
+          ] },
+          { when: 'Eyl 2025 – devam', what: 'Yurt Asistanı', where: 'Koç Üniversitesi', key: 'leadership', points: [
+            'Lisans öğrencileri için kat operasyonlarını ve anlaşmazlık çözümünü yürütüyorum.',
+          ] },
+          { when: 'Haz 2024 – Eyl 2025', what: 'Birinci Sınıf Mentoru', where: 'Koç Üniversitesi', key: 'leadership', points: [
+            'Birinci sınıf mühendislik öğrencilerine ders planlaması ve kampüse uyum konusunda rehberlik ettim.',
+          ] },
+        ],
+      },
+      {
+        title: 'Eğitim',
+        items: [
+          { when: 'Eyl 2022 – 2027', what: 'Endüstri Mühendisliği ve Bilgisayar Mühendisliği', where: 'Koç Üniversitesi', place: 'İstanbul', key: 'education', points: [
+            'Çift anadal, tam başarı bursu. 2027’de mezun oluyorum.',
+          ] },
+          { when: 'Eyl 2018 – Haz 2022', what: 'Lise Diploması', where: 'TED Konya Koleji', key: 'education', points: [
+            'Tam eğitim bursu.',
+          ] },
+        ],
+      },
     ],
   },
   contact: {

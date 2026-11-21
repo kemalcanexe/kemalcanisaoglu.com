@@ -83,20 +83,28 @@ const work = [
 
     <section class="exp" id="experience" aria-labelledby="exp-title">
       <h2 id="exp-title" class="sec-title">{t.timeline.heading}</h2>
-      <ol class="timeline">
-        {t.timeline.items.map((it) => {
-          const k = it.key ? face(it.key) : undefined;
-          return (
-            <li style={k ? `--face:${k.face}` : ''}>
-              <button type="button" class="tl-row" data-open={it.key} aria-haspopup="dialog">
-                <span class="tl-when">{it.when}</span>
-                <span class="tl-what">{it.what}</span>
-                <span class="tl-where">{it.where}</span>
-              </button>
-            </li>
-          );
-        })}
-      </ol>
+      {t.timeline.groups.map((g) => (
+        <div class="tl-group">
+          <h3 class="tl-group-title">{g.title}</h3>
+          <ol class="timeline">
+            {g.items.map((it) => {
+              const k = it.key ? face(it.key) : undefined;
+              const deep = it.key && ['insider', 'portakasa', 'icron'].includes(it.key);
+              return (
+                <li class="tl-item" style={k ? `--face:${k.face};--edge:${k.edge}` : ''}>
+                  <p class="tl-when">{it.when}{it.place && <span>{it.place}</span>}</p>
+                  <div class="tl-body">
+                    <h4 class="tl-what">{it.what}</h4>
+                    <p class="tl-where">{it.where}</p>
+                    <ul class="tl-points">{it.points.map((pt) => <li>{pt}</li>)}</ul>
+                    {deep && <button type="button" class="tl-more" data-open={it.key} aria-haspopup="dialog">{t.dialog.open} {it.where}</button>}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      ))}
     </section>
 
     <section class="contact" id="contact" aria-labelledby="contact-title">
