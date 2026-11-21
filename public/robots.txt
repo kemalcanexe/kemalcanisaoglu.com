@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kemalcanisaoglu.com/sitemap-index.xml

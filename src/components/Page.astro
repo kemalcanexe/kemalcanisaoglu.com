@@ -1,0 +1,142 @@
+---
+import Base from '../layouts/Base.astro';
+import Console from './Console.astro';
+import Dialogs from './Dialogs.astro';
+import { dict, LINKS, type Lang } from '../i18n/content';
+import { KEYS } from '../data/keys';
+import { ICONS } from '../data/icons';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = dict[lang];
+const face = (id: string) => KEYS.find((k) => k.id === id)!;
+const work = [
+  { id: 'insider', ...t.work.insider },
+  { id: 'portakasa', ...t.work.portakasa },
+] as const;
+---
+<Base lang={lang}>
+  <a class="skip" href="#main">{t.nav.skip}</a>
+
+  <div class="glow" aria-hidden="true" data-glow></div>
+
+  <header class="top">
+    <a class="mark" href={lang === 'en' ? '/' : '/tr/'} aria-label="Kemal Can İsaoğlu">kemal<span>.</span></a>
+    <nav class="nav" aria-label={t.nav.menu}>
+      <a href="#work">{t.nav.work}</a>
+      <a href="#about" data-open="about">{t.nav.about}</a>
+      <a href="#experience">{t.nav.experience}</a>
+      <a href="#contact">{t.nav.contact}</a>
+    </nav>
+    <div class="top-tools">
+      <button type="button" class="icon-btn" data-sound aria-pressed="false" aria-label={t.nav.sound}
+              data-on={t.nav.soundOn} data-off={t.nav.soundOff}>
+        <span class="i-on" set:html={ICONS.sound} /><span class="i-off" set:html={ICONS.mute} />
+      </button>
+      <a class="lang" href={t.nav.langHref} hreflang={lang === 'en' ? 'tr' : 'en'} lang={lang === 'en' ? 'tr' : 'en'} aria-label={t.nav.langLabel}>{t.nav.lang}</a>
+      <a class="talk" href="#contact" data-open="contact">{t.nav.talk}</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="hero-title">{t.hero.hi} <em>{t.hero.name}</em></h1>
+      <p class="hero-sub">{t.hero.sub}</p>
+      <Console lang={lang} />
+    </section>
+
+    <div class="strip" aria-label={lang === 'en' ? 'Where I have worked and studied' : 'Çalıştığım ve okuduğum yerler'}>
+      <div class="strip-track">
+        {[0, 1].map((n) => (
+          <ul aria-hidden={n === 1 ? 'true' : undefined}>
+            {t.strip.map((s) => <li>{s}</li>)}
+          </ul>
+        ))}
+      </div>
+    </div>
+
+    <section class="work" id="work" aria-labelledby="work-title">
+      <h2 id="work-title" class="sec-title">{t.work.heading}</h2>
+      <div class="work-grid">
+        {work.map((w) => {
+          const k = face(w.id);
+          return (
+            <article class={`plate plate-${w.id}`} style={`--face:${k.face};--edge:${k.edge};--ink:${k.ink}`}>
+              <div class="plate-head">
+                <span class="plate-cap" set:html={ICONS[w.id]} aria-hidden="true" />
+                <div>
+                  <h3>{w.name}</h3>
+                  <p class="plate-role">{w.role} <span>{w.when}</span></p>
+                </div>
+              </div>
+              <p class="plate-line">{w.line}</p>
+              <dl class="plate-stats">
+                {w.stats.map((s) => (<div><dt>{s.n}</dt><dd>{s.label}</dd></div>))}
+              </dl>
+              <ul class="plate-points">{w.points.map((p) => <li>{p}</li>)}</ul>
+              <button type="button" class="btn btn-face" data-open={w.id} aria-haspopup="dialog">{w.cta}</button>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="exp" id="experience" aria-labelledby="exp-title">
+      <h2 id="exp-title" class="sec-title">{t.timeline.heading}</h2>
+      <ol class="timeline">
+        {t.timeline.items.map((it) => {
+          const k = it.key ? face(it.key) : undefined;
+          return (
+            <li style={k ? `--face:${k.face}` : ''}>
+              <button type="button" class="tl-row" data-open={it.key} aria-haspopup="dialog">
+                <span class="tl-when">{it.when}</span>
+                <span class="tl-what">{it.what}</span>
+                <span class="tl-where">{it.where}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title">{t.contact.heading}</h2>
+      <div class="contact-side">
+        <p>{t.contact.text}</p>
+        <div class="contact-actions">
+          <a class="email" href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
+          <button type="button" class="btn btn-ghost" data-copy={LINKS.email} data-copied={t.contact.copied}>
+            <span set:html={ICONS.copy} /><span data-copy-label>{t.contact.copy}</span>
+          </button>
+        </div>
+        <div class="contact-actions">
+          <a class="btn" href={LINKS.linkedin} target="_blank" rel="noopener"><span set:html={ICONS.linkedin} />{t.contact.linkedin}</a>
+          <a class="btn" href={LINKS.cv} download="Kemal-Can-Isaoglu-CV.pdf"><span set:html={ICONS.download} />{t.contact.cv}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span>© 2026 {t.footer}</span>
+    <a href={t.nav.langHref} hreflang={lang === 'en' ? 'tr' : 'en'}>{t.nav.langLabel}</a>
+  </footer>
+
+  <nav class="dock" aria-label={t.nav.menu}>
+    <a href="#work">{t.nav.work}</a>
+    <a href="#about" data-open="about">{t.nav.about}</a>
+    <a href="#experience">{t.nav.experience}</a>
+    <a href="#contact" class="dock-talk" data-open="contact">{t.nav.talk}</a>
+  </nav>
+
+  <Dialogs lang={lang} />
+
+  <!-- iOS 18+ gives haptic feedback when a switch toggles; used for key taps. -->
+  <label class="haptic" aria-hidden="true" data-haptic><input type="checkbox" {...{ switch: true }} tabindex="-1" /></label>
+
+  <div class="sr-only" role="status" aria-live="polite" data-live></div>
+
+  <script>
+    import '../scripts/main.ts';
+  </script>
+</Base>

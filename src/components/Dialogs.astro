@@ -1,0 +1,57 @@
+---
+import { dict, type Lang, type KeyId } from '../i18n/content';
+import { KEYS } from '../data/keys';
+import { ICONS } from '../data/icons';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = dict[lang];
+const entries = Object.entries(t.modals) as [KeyId, NonNullable<(typeof t.modals)[KeyId]>][];
+const keyOf = (id: KeyId) => KEYS.find((k) => k.id === id)!;
+---
+{entries.map(([id, m]) => {
+  const k = keyOf(id);
+  return (
+    <dialog class="sheet" id={`d-${id}`} data-dialog={id} aria-labelledby={`d-${id}-title`}
+            style={`--face:${k.face};--edge:${k.edge};--ink:${k.ink}`}>
+      <div class="sheet-inner">
+        <div class="sheet-grip" data-grip aria-hidden="true"><span></span></div>
+        <header class="sheet-head">
+          <span class="sheet-chip" set:html={ICONS[id]} aria-hidden="true" />
+          <div>
+            <h2 id={`d-${id}-title`}>{m.title}</h2>
+            {m.meta && <p class="sheet-meta">{m.meta}</p>}
+          </div>
+          <button type="button" class="sheet-close" data-close aria-label={t.dialog.close} set:html={ICONS.close} />
+        </header>
+        <div class="sheet-body" tabindex="0" role="region" aria-labelledby={`d-${id}-title`}>
+          <p class="sheet-lead">{m.lead}</p>
+          {m.stats && (
+            <dl class="sheet-stats">
+              {m.stats.map((s) => (<div><dt>{s.n}</dt><dd>{s.label}</dd></div>))}
+            </dl>
+          )}
+          {m.blocks.map((b) => (
+            <section class="sheet-block">
+              {b.title && <h3>{b.title}</h3>}
+              <ul>{b.items.map((it) => <li>{it}</li>)}</ul>
+            </section>
+          ))}
+          {m.tags && <ul class="tags" aria-label="Tags">{m.tags.map((tg) => <li>{tg}</li>)}</ul>}
+          {m.links && (
+            <div class="sheet-links">
+              {m.links.map((l) => (
+                <a class="btn" href={l.href}
+                   {...(l.external ? { target: '_blank', rel: 'noopener' } : {})}
+                   {...(l.download ? { download: 'Kemal-Can-Isaoglu-CV.pdf' } : {})}>
+                  <span set:html={l.download ? ICONS.download : l.external ? ICONS.external : ICONS.mail} />
+                  {l.label}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </dialog>
+  );
+})}
