@@ -285,6 +285,17 @@ if (consoleEl && 'IntersectionObserver' in window) {
   new IntersectionObserver(([en]) => { consoleVisible = en.isIntersecting; if (consoleVisible) kick(); }, { threshold: 0.05 }).observe(consoleEl);
 }
 
+/* ───────── mobile dock: appears once the hero has scrolled away ───────── */
+const dockEl = document.querySelector<HTMLElement>('[data-dock]');
+const heroEl = document.querySelector<HTMLElement>('.hero');
+if (dockEl && heroEl) {
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([en]) => dockEl.classList.toggle('show', !en.isIntersecting), { threshold: 0 }).observe(heroEl);
+  } else {
+    dockEl.classList.add('show');
+  }
+}
+
 /* ───────── tilt, light, proximity ───────── */
 const centers = KEYS.map((k) => ({ x: k.cx / IMG_W, y: k.cy / IMG_H }));
 const proxCache = new Array(keyEls.length).fill(0);

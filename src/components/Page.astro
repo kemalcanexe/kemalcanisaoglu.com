@@ -40,20 +40,10 @@ const work = [
 
   <main id="main">
     <section class="hero" aria-labelledby="hero-title">
-      <h1 id="hero-title" class="hero-title">{t.hero.hi} <em>{t.hero.name}</em></h1>
+      <h1 id="hero-title" class="hero-title">{t.hero.name}<span>.</span></h1>
       <p class="hero-sub">{t.hero.sub}</p>
       <Console lang={lang} />
     </section>
-
-    <div class="strip" aria-label={lang === 'en' ? 'Where I have worked and studied' : 'Çalıştığım ve okuduğum yerler'}>
-      <div class="strip-track">
-        {[0, 1].map((n) => (
-          <ul aria-hidden={n === 1 ? 'true' : undefined}>
-            {t.strip.map((s) => <li>{s}</li>)}
-          </ul>
-        ))}
-      </div>
-    </div>
 
     <section class="work" id="work" aria-labelledby="work-title">
       <h2 id="work-title" class="sec-title">{t.work.heading}</h2>
@@ -70,9 +60,11 @@ const work = [
                 </div>
               </div>
               <p class="plate-line">{w.line}</p>
-              <dl class="plate-stats">
-                {w.stats.map((s) => (<div><dt>{s.n}</dt><dd>{s.label}</dd></div>))}
-              </dl>
+              {w.stats.length > 0 && (
+                <dl class="plate-stats">
+                  {w.stats.map((s) => (<div><dt>{s.n}</dt><dd>{s.label}</dd></div>))}
+                </dl>
+              )}
               <ul class="plate-points">{w.points.map((p) => <li>{p}</li>)}</ul>
               <button type="button" class="btn btn-face" data-open={w.id} aria-haspopup="dialog">{w.cta}</button>
             </article>
@@ -97,7 +89,7 @@ const work = [
                     <h4 class="tl-what">{it.what}</h4>
                     <p class="tl-where">{it.where}</p>
                     <ul class="tl-points">{it.points.map((pt) => <li>{pt}</li>)}</ul>
-                    {deep && <button type="button" class="tl-more" data-open={it.key} aria-haspopup="dialog">{t.dialog.open} {it.where}</button>}
+                    {deep && <button type="button" class="tl-more" data-open={it.key} aria-haspopup="dialog" aria-label={`${t.dialog.open}: ${it.where}`}>{t.dialog.open}</button>}
                   </div>
                 </li>
               );
@@ -130,7 +122,7 @@ const work = [
     <a href={t.nav.langHref} hreflang={lang === 'en' ? 'tr' : 'en'}>{t.nav.langLabel}</a>
   </footer>
 
-  <nav class="dock" aria-label={t.nav.menu}>
+  <nav class="dock" data-dock aria-label={t.nav.menu}>
     <a href="#work">{t.nav.work}</a>
     <a href="#about" data-open="about">{t.nav.about}</a>
     <a href="#experience">{t.nav.experience}</a>

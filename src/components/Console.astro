@@ -26,7 +26,7 @@ const screenData = {
       formats={['avif', 'webp']}
       quality={78}
       widths={[480, 768, 1024, 1280, 1536]}
-      sizes="(max-width: 640px) 116vw, min(1640px, 116vw)"
+      sizes="(max-width: 640px) 132vw, min(1640px, 116vw)"
       alt=""
       class="device-img"
       loading="eager"
@@ -39,7 +39,7 @@ const screenData = {
     <div class="screen" data-screen>
       <div class="screen-glass">
         <div class="scr-meta" aria-hidden="true">
-          <span>{t.screen.meta}</span>
+          <span>{t.screen.meta.split(' / ')[0]}<span class="scr-meta-extra"> / {t.screen.meta.split(' / ').slice(1).join(' / ')}</span></span>
           <span class="scr-status" data-status>{t.screen.ready}</span>
         </div>
         <p class="scr-title">

@@ -29,10 +29,9 @@ export interface KeyText { label: string; screen: string; desc: string }
 interface Dict {
   meta: { title: string; description: string; ogAlt: string };
   nav: { work: string; about: string; experience: string; contact: string; talk: string; sound: string; soundOn: string; soundOff: string; lang: string; langHref: string; langLabel: string; skip: string; menu: string };
-  hero: { hi: string; name: string; sub: string };
+  hero: { name: string; sub: string };
   screen: { meta: string; title: string; desc: string; typing: string; ready: string; prompt: string; hint: string };
   device: { label: string };
-  strip: string[];
   work: {
     heading: string;
     insider: { name: string; role: string; when: string; line: string; stats: Stat[]; points: string[]; cta: string };
@@ -60,25 +59,23 @@ const en: Dict = {
     lang: 'TR', langHref: '/tr/', langLabel: 'Türkçe', skip: 'Skip to content', menu: 'Main',
   },
   hero: {
-    hi: 'Hi, I’m',
-    name: 'Kemal',
-    sub: 'Product manager in the making. I build data and integration products at Insider One, and my own startup, Portakasa.',
+    name: 'Kemal Can İsaoğlu',
+    sub: 'Product management intern at Insider One, building data and integration products. Founder of Portakasa.',
   },
   screen: {
     meta: 'KEMAL CAN / PRODUCT INDEX',
     title: 'Kemal’s console',
-    desc: 'Integrations, data and a startup of my own.',
+    desc: 'Integrations, data and a startup of my own',
     typing: 'TYPING', ready: 'READY',
     prompt: 'type a command', hint: 'type help',
   },
   device: { label: 'Portfolio console. Each key opens a section.' },
-  strip: ['Insider One', 'Portakasa', 'ICRON Technologies', 'Koç University', 'Turkish Education Association'],
   work: {
     heading: 'Selected work',
     insider: {
       name: 'Insider One',
       role: 'Product Management Intern',
-      when: 'Jul 2026 – now · Remote',
+      when: 'Jul 2026 – now, Remote',
       line: 'I run product work for external integrations on a global B2B customer-experience platform: data warehouses, zero-copy data sharing and ad platforms.',
       stats: [
         { n: '25+', label: 'development-ready Jira tasks' },
@@ -87,25 +84,19 @@ const en: Dict = {
       ],
       points: [
         'Writing the product vision for a new ad-platform lead-import integration',
-        'Running UAT before every release I own',
-        'Using Salesforce and Jira data to steer the roadmap',
+        'Running UAT on every release I own',
       ],
       cta: 'Open Insider One',
     },
     portakasa: {
       name: 'Portakasa',
       role: 'Founder',
-      when: 'Aug 2026 – now · Istanbul',
+      when: 'Aug 2026 – now, Istanbul',
       line: 'A pre-accounting SaaS for small businesses. I founded it and built the product end to end with Claude Code.',
-      stats: [
-        { n: '1st', label: 'customer in development beta' },
-        { n: 'e-Invoice', label: 'and e-Archive built in' },
-        { n: '0 → 1', label: 'discovery, design, delivery' },
-      ],
+      stats: [],
       points: [
         'Collections, customer accounts and a self-serve customer portal',
-        'An assistant that drafts reminders and matches receipts; the user approves',
-        'Roadmap shaped directly by beta feedback',
+        'An assistant drafts reminders and matches receipts; the user approves',
       ],
       cta: 'Open Portakasa',
     },
@@ -170,30 +161,30 @@ const en: Dict = {
     ],
   },
   contact: {
-    heading: 'Good products start with hello.',
-    text: 'Hiring for a product role, or want to talk integrations, data or startups? My inbox is open.',
+    heading: 'Let’s build something.',
+    text: 'Integrations, data or startups, email is the fastest way to reach me.',
     copy: 'Copy email', copied: 'Copied',
     linkedin: 'LinkedIn', cv: 'Download CV',
   },
-  dialog: { close: 'Close', open: 'Open' },
-  footer: 'Kemal Can İsaoğlu · Istanbul',
+  dialog: { close: 'Close', open: 'Details' },
+  footer: 'Kemal Can İsaoğlu, Istanbul',
   keys: {
-    insider: { label: 'Insider One', screen: 'Insider One', desc: 'PM intern. Integrations, data and ad platforms.' },
-    portakasa: { label: 'Portakasa', screen: 'Portakasa', desc: 'My startup. Pre-accounting SaaS, built end to end.' },
-    icron: { label: 'ICRON', screen: 'ICRON', desc: 'Technical PM intern. Built a forecasting service solo.' },
-    ai: { label: 'AI workflows', screen: 'AI workflows', desc: '7 automations built with Claude Code.' },
-    about: { label: 'About', screen: 'About me', desc: 'Industrial engineer, computer scientist, builder.' },
-    education: { label: 'Education', screen: 'Education', desc: 'Koç University. IE + CS double major.' },
-    leadership: { label: 'Leadership', screen: 'Leadership', desc: 'Student union president and mentor.' },
-    skills: { label: 'Skills', screen: 'Skills', desc: 'Product, data and tooling.' },
-    cv: { label: 'CV', screen: 'Download CV', desc: 'One page PDF, always current.' },
+    insider: { label: 'Insider One', screen: 'Insider One', desc: 'PM intern. Integrations, data and ad platforms' },
+    portakasa: { label: 'Portakasa', screen: 'Portakasa', desc: 'My startup. Pre-accounting SaaS, built end to end' },
+    icron: { label: 'ICRON', screen: 'ICRON', desc: 'Technical PM intern. Built a forecasting service solo' },
+    ai: { label: 'AI workflows', screen: 'AI workflows', desc: '7 automations built with Claude Code' },
+    about: { label: 'About', screen: 'About me', desc: 'Industrial engineer, computer scientist, builder' },
+    education: { label: 'Education', screen: 'Education', desc: 'Koç University. IE + CS double major' },
+    leadership: { label: 'Leadership', screen: 'Leadership', desc: 'Student union president and mentor' },
+    skills: { label: 'Skills', screen: 'Skills', desc: 'Product, data and tooling' },
+    cv: { label: 'CV', screen: 'Download CV', desc: 'PDF' },
     linkedin: { label: 'LinkedIn', screen: 'LinkedIn', desc: 'linkedin.com/in/kemalcanisaoglu' },
-    contact: { label: 'Let’s talk', screen: 'Let’s talk', desc: 'Email, LinkedIn and CV in one place.' },
+    contact: { label: 'Let’s talk', screen: 'Let’s talk', desc: 'Email, LinkedIn and CV in one place' },
   },
   modals: {
     insider: {
       title: 'Insider One',
-      meta: 'Product Management Intern · Jul 2026 – now · Remote',
+      meta: 'Product Management Intern, Jul 2026 – now, Remote',
       lead: 'I manage product work for external platform integrations on a global B2B customer-experience platform, with engineering, design and customer success.',
       stats: [
         { n: '25+', label: 'Jira tasks, scoped and development-ready' },
@@ -211,7 +202,7 @@ const en: Dict = {
           ],
         },
         {
-          title: 'How I decide and ship',
+          title: 'How I work',
           items: [
             'Salesforce and Jira analysis of integration demand, churn and quality.',
             'Sprint reviews, feature announcements and help-center updates with Product Education.',
@@ -223,11 +214,10 @@ const en: Dict = {
     },
     portakasa: {
       title: 'Portakasa',
-      meta: 'Founder · Aug 2026 – now · Istanbul',
+      meta: 'Founder, Aug 2026 – now, Istanbul',
       lead: 'A pre-accounting SaaS for small businesses in Turkey. I founded it and built the product end to end with Claude Code, from discovery to delivery.',
       stats: [
         { n: '1st', label: 'customer in a development beta' },
-        { n: 'End to end', label: 'built with Claude Code' },
       ],
       blocks: [
         {
@@ -254,7 +244,7 @@ const en: Dict = {
     },
     icron: {
       title: 'ICRON Technologies',
-      meta: 'Technical Product Management Intern · Jun 2025 – Jul 2026 · Istanbul',
+      meta: 'Technical Product Management Intern, Jun 2025 – Jul 2026, Istanbul',
       lead: 'Supply chain planning for enterprise clients including Şişecam, Tüpraş and Akbank.',
       blocks: [
         {
@@ -281,7 +271,7 @@ const en: Dict = {
     },
     ai: {
       title: 'AI workflows',
-      meta: 'Claude Code · Codex · MCP',
+      meta: 'Tools: Claude Code, Codex, MCP',
       lead: 'I use AI agents to take repetitive product work off the team’s plate, and to build products myself.',
       stats: [{ n: '7', label: 'workflow automations at Insider One' }],
       blocks: [
@@ -302,7 +292,7 @@ const en: Dict = {
     },
     about: {
       title: 'About me',
-      meta: 'Istanbul · Turkish and English',
+      meta: 'Istanbul, Turkish and English',
       lead: 'Industrial Engineering and Computer Science double major at Koç University, graduating in 2027, with two product management internships in B2B SaaS.',
       blocks: [
         {
@@ -320,11 +310,11 @@ const en: Dict = {
       lead: 'Two degrees, one way of thinking: systems from the industrial side, software from the computer science side.',
       blocks: [
         {
-          title: 'Koç University · 2022 – 2027 (expected)',
+          title: 'Koç University, 2022 – 2027 (expected)',
           items: ['B.S. Industrial Engineering and B.S. Computer Science and Engineering, double major.', 'Full merit scholarship.'],
         },
         {
-          title: 'TED Konya College · 2018 – 2022',
+          title: 'TED Konya College, 2018 – 2022',
           items: ['High school diploma, full education scholarship.'],
         },
       ],
@@ -333,11 +323,11 @@ const en: Dict = {
       title: 'Leadership',
       lead: 'Communities I have led and people I have mentored.',
       blocks: [
-        { title: 'President, Student Union · Turkish Education Association · 2023 – 2026', items: ['Led union strategy and every committee as president, after serving as vice president and finance board member.'] },
-        { title: 'Head of MarketTalks and External Affairs · Marketing Club of Koç University · 2023 – 2025', items: ['Ran the seminar series end to end and coordinated the Kamp’24 and Kamp’25 operations.'] },
-        { title: 'Career Ambassador · Koç University · Oct 2026 – now', items: ['One-on-one mentoring on internship search, CVs and career planning.'] },
-        { title: 'Resident Assistant · Koç University · Sep 2025 – now', items: ['Floor operations and conflict resolution for undergraduate residents.'] },
-        { title: 'Freshman Student Mentor · Koç University · 2024 – 2025', items: ['Guided first-year engineering students through planning and campus life.'] },
+        { title: 'President, Student Union, Turkish Education Association, 2023 – 2026', items: ['Led union strategy and every committee as president, after serving as vice president and finance board member.'] },
+        { title: 'Head of MarketTalks and External Affairs, Marketing Club of Koç University, 2023 – 2025', items: ['Ran the seminar series end to end and coordinated the Kamp’24 and Kamp’25 operations.'] },
+        { title: 'Career Ambassador, Koç University, Oct 2026 – now', items: ['One-on-one mentoring on internship search, CVs and career planning.'] },
+        { title: 'Resident Assistant, Koç University, Sep 2025 – now', items: ['Floor operations and conflict resolution for undergraduate residents.'] },
+        { title: 'Freshman Student Mentor, Koç University, 2024 – 2025', items: ['Guided first-year engineering students through planning and campus life.'] },
       ],
     },
     skills: {
@@ -352,7 +342,7 @@ const en: Dict = {
     },
     contact: {
       title: 'Let’s talk',
-      lead: 'Hiring for a product role, or want to talk integrations, data or startups? Email is the fastest way to reach me.',
+      lead: 'Want to talk integrations, data or startups? Email is the fastest way to reach me.',
       blocks: [],
       links: [
         { label: LINKS.email, href: `mailto:${LINKS.email}` },
@@ -382,25 +372,23 @@ const tr: Dict = {
     lang: 'EN', langHref: '/', langLabel: 'English', skip: 'İçeriğe geç', menu: 'Ana menü',
   },
   hero: {
-    hi: 'Merhaba, ben',
-    name: 'Kemal',
-    sub: 'Ürün yöneticisi adayıyım. Insider One’da veri ve entegrasyon ürünleri geliştiriyor, kendi girişimim Portakasa’yı büyütüyorum.',
+    name: 'Kemal Can İsaoğlu',
+    sub: 'Insider One’da veri ve entegrasyon ürünleri geliştiren ürün yönetimi stajyeri. Portakasa’nın kurucusu.',
   },
   screen: {
     meta: 'KEMAL CAN / ÜRÜN DİZİNİ',
     title: 'Kemal’in konsolu',
-    desc: 'Entegrasyonlar, veri ve kendi girişimim.',
+    desc: 'Entegrasyonlar, veri ve kendi girişimim',
     typing: 'YAZIYOR', ready: 'HAZIR',
     prompt: 'bir komut yazın', hint: 'help yazın',
   },
   device: { label: 'Portfolyo konsolu. Her tuş bir bölüm açar.' },
-  strip: ['Insider One', 'Portakasa', 'ICRON Technologies', 'Koç Üniversitesi', 'Türk Eğitim Derneği'],
   work: {
     heading: 'Öne çıkan işler',
     insider: {
       name: 'Insider One',
       role: 'Ürün Yönetimi Stajyeri',
-      when: 'Tem 2026 – devam · Uzaktan',
+      when: 'Tem 2026 – devam, Uzaktan',
       line: 'Global bir B2B müşteri deneyimi platformunda dış entegrasyonların ürün tarafını yürütüyorum: veri ambarları, sıfır kopya veri paylaşımı ve reklam platformları.',
       stats: [
         { n: '25+', label: 'geliştirmeye hazır Jira görevi' },
@@ -409,25 +397,19 @@ const tr: Dict = {
       ],
       points: [
         'Yeni bir reklam platformu lead aktarım entegrasyonunun ürün vizyonunu yazıyorum',
-        'Sorumlu olduğum her sürümden önce UAT yürütüyorum',
-        'Yol haritasını Salesforce ve Jira verisiyle yönlendiriyorum',
+        'Sorumlu olduğum her sürümde UAT yürütüyorum',
       ],
       cta: 'Insider One’ı aç',
     },
     portakasa: {
       name: 'Portakasa',
       role: 'Kurucu',
-      when: 'Ağu 2026 – devam · İstanbul',
+      when: 'Ağu 2026 – devam, İstanbul',
       line: 'Küçük işletmeler için bir ön muhasebe SaaS’ı. Şirketi kurdum, ürünü Claude Code ile uçtan uca geliştirdim.',
-      stats: [
-        { n: '1.', label: 'müşteriyle geliştirme betası' },
-        { n: 'e-Fatura', label: 've e-Arşiv dahil' },
-        { n: '0 → 1', label: 'keşif, tasarım, teslim' },
-      ],
+      stats: [],
       points: [
         'Tahsilat, cari hesap ve müşterilerin kendi ekstrelerini gördüğü portal',
-        'Hatırlatma zamanlayan ve dekont eşleştiren asistan; son onay kullanıcıda',
-        'Yol haritası doğrudan beta geri bildirimiyle şekilleniyor',
+        'Asistan hatırlatma hazırlar ve dekont eşleştirir; son onay kullanıcıda',
       ],
       cta: 'Portakasa’yı aç',
     },
@@ -492,30 +474,30 @@ const tr: Dict = {
     ],
   },
   contact: {
-    heading: 'İyi ürünler bir merhabayla başlar.',
-    text: 'Ürün rolü için aday mı arıyorsunuz, yoksa entegrasyonlar, veri ya da girişimler üzerine mi konuşmak istiyorsunuz? Bana e-postayla ulaşabilirsiniz.',
+    heading: 'Birlikte bir şeyler üretelim.',
+    text: 'Entegrasyonlar, veri ya da girişimler için en hızlı yol e-posta.',
     copy: 'E-postayı kopyala', copied: 'Kopyalandı',
     linkedin: 'LinkedIn', cv: 'CV’yi indir',
   },
-  dialog: { close: 'Kapat', open: 'Aç' },
-  footer: 'Kemal Can İsaoğlu · İstanbul',
+  dialog: { close: 'Kapat', open: 'Ayrıntılar' },
+  footer: 'Kemal Can İsaoğlu, İstanbul',
   keys: {
-    insider: { label: 'Insider One', screen: 'Insider One', desc: 'PM stajyeri. Entegrasyonlar, veri, reklam platformları.' },
-    portakasa: { label: 'Portakasa', screen: 'Portakasa', desc: 'Girişimim. Uçtan uca geliştirilmiş ön muhasebe SaaS’ı.' },
-    icron: { label: 'ICRON', screen: 'ICRON', desc: 'Teknik PM stajyeri. Tahmin servisini tek başıma geliştirdim.' },
-    ai: { label: 'YZ akışları', screen: 'YZ iş akışları', desc: 'Claude Code ile kurulan 7 otomasyon.' },
-    about: { label: 'Hakkımda', screen: 'Hakkımda', desc: 'Endüstri mühendisi, bilgisayar bilimci, üretici.' },
-    education: { label: 'Eğitim', screen: 'Eğitim', desc: 'Koç Üniversitesi. Endüstri + Bilgisayar çift anadal.' },
-    leadership: { label: 'Liderlik', screen: 'Liderlik', desc: 'Öğrenci birliği başkanı ve mentor.' },
-    skills: { label: 'Yetkinlikler', screen: 'Yetkinlikler', desc: 'Ürün, veri ve araçlar.' },
-    cv: { label: 'CV', screen: 'CV’yi indir', desc: 'Tek sayfalık güncel PDF.' },
+    insider: { label: 'Insider One', screen: 'Insider One', desc: 'PM stajyeri. Entegrasyonlar, veri, reklam platformları' },
+    portakasa: { label: 'Portakasa', screen: 'Portakasa', desc: 'Girişimim. Uçtan uca geliştirilmiş ön muhasebe SaaS’ı' },
+    icron: { label: 'ICRON', screen: 'ICRON', desc: 'Teknik PM stajyeri. Tahmin servisini tek başıma geliştirdim' },
+    ai: { label: 'YZ akışları', screen: 'YZ iş akışları', desc: 'Claude Code ile kurulan 7 otomasyon' },
+    about: { label: 'Hakkımda', screen: 'Hakkımda', desc: 'Endüstri mühendisi, bilgisayar bilimci, üretici' },
+    education: { label: 'Eğitim', screen: 'Eğitim', desc: 'Koç Üniversitesi. Endüstri + Bilgisayar çift anadal' },
+    leadership: { label: 'Liderlik', screen: 'Liderlik', desc: 'Öğrenci birliği başkanı ve mentor' },
+    skills: { label: 'Yetkinlikler', screen: 'Yetkinlikler', desc: 'Ürün, veri ve araçlar' },
+    cv: { label: 'CV', screen: 'CV’yi indir', desc: 'PDF' },
     linkedin: { label: 'LinkedIn', screen: 'LinkedIn', desc: 'linkedin.com/in/kemalcanisaoglu' },
-    contact: { label: 'Konuşalım', screen: 'Konuşalım', desc: 'E-posta, LinkedIn ve CV tek yerde.' },
+    contact: { label: 'Konuşalım', screen: 'Konuşalım', desc: 'E-posta, LinkedIn ve CV tek yerde' },
   },
   modals: {
     insider: {
       title: 'Insider One',
-      meta: 'Ürün Yönetimi Stajyeri · Tem 2026 – devam · Uzaktan',
+      meta: 'Ürün Yönetimi Stajyeri, Tem 2026 – devam, Uzaktan',
       lead: 'Global bir B2B müşteri deneyimi platformunda dış platform entegrasyonlarının ürün işlerini mühendislik, tasarım ve müşteri başarısı ekipleriyle birlikte yürütüyorum.',
       stats: [
         { n: '25+', label: 'kapsamı net, geliştirmeye hazır Jira görevi' },
@@ -524,7 +506,7 @@ const tr: Dict = {
       ],
       blocks: [
         {
-          title: 'Sorumlu olduklarım',
+          title: 'Sorumluluklarım',
           items: [
             'Veri ambarı içe ve dışa aktarım, sıfır kopya veri paylaşımı ve reklam platformu entegrasyonları.',
             'Yeni bir reklam platformu lead aktarım entegrasyonu için keşif ve ürün vizyonu dokümanı.',
@@ -533,7 +515,7 @@ const tr: Dict = {
           ],
         },
         {
-          title: 'Nasıl karar verip yayına alıyorum',
+          title: 'Nasıl çalışıyorum',
           items: [
             'Entegrasyon talebi, kayıp ve kalite üzerine Salesforce ve Jira analizi.',
             'Ürün Eğitimi ekibiyle sprint değerlendirmeleri, özellik duyuruları ve yardım merkezi güncellemeleri.',
@@ -545,11 +527,10 @@ const tr: Dict = {
     },
     portakasa: {
       title: 'Portakasa',
-      meta: 'Kurucu · Ağu 2026 – devam · İstanbul',
+      meta: 'Kurucu, Ağu 2026 – devam, İstanbul',
       lead: 'Türkiye’deki küçük işletmeler için bir ön muhasebe SaaS’ı. Şirketi kurdum, ürünü keşiften teslime kadar Claude Code ile uçtan uca geliştirdim.',
       stats: [
         { n: '1.', label: 'müşteriyle geliştirme betası' },
-        { n: 'Uçtan uca', label: 'Claude Code ile geliştirildi' },
       ],
       blocks: [
         {
@@ -576,7 +557,7 @@ const tr: Dict = {
     },
     icron: {
       title: 'ICRON Technologies',
-      meta: 'Teknik Ürün Yönetimi Stajyeri · Haz 2025 – Tem 2026 · İstanbul',
+      meta: 'Teknik Ürün Yönetimi Stajyeri, Haz 2025 – Tem 2026, İstanbul',
       lead: 'Şişecam, Tüpraş ve Akbank gibi kurumsal müşteriler için tedarik zinciri planlama.',
       blocks: [
         {
@@ -603,7 +584,7 @@ const tr: Dict = {
     },
     ai: {
       title: 'YZ iş akışları',
-      meta: 'Claude Code · Codex · MCP',
+      meta: 'Araçlar: Claude Code, Codex, MCP',
       lead: 'Yapay zekâ ajanlarını hem ekibin tekrar eden ürün işlerini azaltmak hem de kendi ürünlerimi geliştirmek için kullanıyorum.',
       stats: [{ n: '7', label: 'Insider One’da iş akışı otomasyonu' }],
       blocks: [
@@ -624,7 +605,7 @@ const tr: Dict = {
     },
     about: {
       title: 'Hakkımda',
-      meta: 'İstanbul · Türkçe ve İngilizce',
+      meta: 'İstanbul, Türkçe ve İngilizce',
       lead: 'Koç Üniversitesi’nde Endüstri ve Bilgisayar Mühendisliği çift anadal öğrencisiyim; 2027’de mezun oluyorum. B2B SaaS’ta iki ürün yönetimi stajım var.',
       blocks: [
         {
@@ -642,11 +623,11 @@ const tr: Dict = {
       lead: 'İki bölüm, tek bakış açısı: sistemleri endüstri mühendisliğinden, yazılımı bilgisayar mühendisliğinden öğreniyorum.',
       blocks: [
         {
-          title: 'Koç Üniversitesi · 2022 – 2027 (beklenen)',
+          title: 'Koç Üniversitesi, 2022 – 2027 (beklenen)',
           items: ['Endüstri Mühendisliği ve Bilgisayar Mühendisliği, çift anadal.', 'Tam başarı bursu.'],
         },
         {
-          title: 'TED Konya Koleji · 2018 – 2022',
+          title: 'TED Konya Koleji, 2018 – 2022',
           items: ['Lise diploması, tam eğitim bursu.'],
         },
       ],
@@ -655,11 +636,11 @@ const tr: Dict = {
       title: 'Liderlik',
       lead: 'Liderlik ettiğim topluluklar ve mentorluk yaptığım öğrenciler.',
       blocks: [
-        { title: 'Öğrenci Birliği Başkanı · Türk Eğitim Derneği · 2023 – 2026', items: ['Başkan yardımcılığı ve finans kurulu üyeliğinin ardından başkan olarak birliğin stratejisini ve tüm komitelerini yönettim.'] },
-        { title: 'MarketTalks ve Dış İlişkiler Sorumlusu · Koç Üniversitesi Pazarlama Kulübü · 2023 – 2025', items: ['Seminer serisini baştan sona yürüttüm; Kamp’24 ve Kamp’25 operasyonlarını koordine ettim.'] },
-        { title: 'Kariyer Elçisi · Koç Üniversitesi · Eki 2026 – devam', items: ['Staj arayışı, CV ve kariyer planlaması üzerine birebir mentorluk.'] },
-        { title: 'Yurt Asistanı · Koç Üniversitesi · Eyl 2025 – devam', items: ['Lisans öğrencileri için kat operasyonları ve anlaşmazlık çözümü.'] },
-        { title: 'Birinci Sınıf Mentoru · Koç Üniversitesi · 2024 – 2025', items: ['Birinci sınıf mühendislik öğrencilerine ders planlaması ve kampüse uyum konusunda rehberlik ettim.'] },
+        { title: 'Öğrenci Birliği Başkanı, Türk Eğitim Derneği, 2023 – 2026', items: ['Başkan yardımcılığı ve finans kurulu üyeliğinin ardından başkan olarak birliğin stratejisini ve tüm komitelerini yönettim.'] },
+        { title: 'MarketTalks ve Dış İlişkiler Sorumlusu, Koç Üniversitesi Pazarlama Kulübü, 2023 – 2025', items: ['Seminer serisini baştan sona yürüttüm; Kamp’24 ve Kamp’25 operasyonlarını koordine ettim.'] },
+        { title: 'Kariyer Elçisi, Koç Üniversitesi, Eki 2026 – devam', items: ['Staj arayışı, CV ve kariyer planlaması üzerine birebir mentorluk.'] },
+        { title: 'Yurt Asistanı, Koç Üniversitesi, Eyl 2025 – devam', items: ['Lisans öğrencileri için kat operasyonları ve anlaşmazlık çözümü.'] },
+        { title: 'Birinci Sınıf Mentoru, Koç Üniversitesi, 2024 – 2025', items: ['Birinci sınıf mühendislik öğrencilerine ders planlaması ve kampüse uyum konusunda rehberlik ettim.'] },
       ],
     },
     skills: {
@@ -674,7 +655,7 @@ const tr: Dict = {
     },
     contact: {
       title: 'Konuşalım',
-      lead: 'Ürün rolü için aday mı arıyorsunuz, yoksa entegrasyonlar, veri ya da girişimler üzerine mi konuşmak istiyorsunuz? Bana en hızlı e-postayla ulaşabilirsiniz.',
+      lead: 'Entegrasyonlar, veri ya da girişimler üzerine konuşmak ister misiniz? Bana en hızlı e-postayla ulaşabilirsiniz.',
       blocks: [],
       links: [
         { label: LINKS.email, href: `mailto:${LINKS.email}` },
