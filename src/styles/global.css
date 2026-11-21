@@ -217,8 +217,6 @@ main, .foot { position: relative; z-index: 1; }
 .keys .key { pointer-events: auto; }
 .key {
   --lift: 0.8cqw; --prox: 0;
-  --rad: 1.35cqw; --top-rad: 1cqw;
-  --top-t: 7%; --top-x: 12.5%; --top-b: 27%;
   position: absolute; left: var(--l); top: var(--t); width: var(--w); height: var(--h);
   padding: 0; margin: 0; border: 0; background: none; cursor: pointer; text-decoration: none;
   transform: rotate(-3.2deg) skewX(4.8deg);
@@ -228,8 +226,6 @@ main, .foot { position: relative; z-index: 1; }
 }
 /* larger tap target, outside the visible cap */
 .key::after { content: ''; position: absolute; inset: -6px; }
-.key-sm { --rad: 1cqw; --top-rad: 0.75cqw; --top-t: 6%; --top-x: 11%; --top-b: 25%; }
-.key-bar { --rad: 1.3cqw; --top-rad: 0.9cqw; --top-t: 9%; --top-x: 4%; --top-b: 28%; }
 
 /* switch stem + housing, anchored in the well */
 .key-stem {
@@ -245,96 +241,53 @@ main, .foot { position: relative; z-index: 1; }
   opacity: calc(0.1 + var(--prox) * 0.7); transition: opacity 0.25s;
 }
 
-/* the keycap: skirt (walls) + dished top surface, moves as one piece */
+/* the keycap: SVG body (Cherry profile, built at build time) + flat-printed legends; moves as one piece */
 .key-cap {
-  position: absolute; inset: 3% 4% 1%;
-  border-radius: var(--rad) var(--rad) calc(var(--rad) * 0.9) calc(var(--rad) * 0.9);
+  position: absolute; inset: 0;
   transform: translate3d(0, calc(-1 * (var(--lift) + var(--prox) * 0.7cqw)), 0);
-  transition: transform 0.4s var(--spring), box-shadow 0.4s var(--spring);
+  transition: transform 0.4s var(--spring);
   will-change: transform;
-  background:
-    /* left wall catches the light, right wall falls into shade */
-    linear-gradient(90deg,
-      color-mix(in srgb, var(--face) 70%, #fff) 0%,
-      color-mix(in srgb, var(--face) 92%, #fff) 6%,
-      transparent 13%, transparent 86%,
-      color-mix(in srgb, var(--edge) 80%, #000) 94%,
-      color-mix(in srgb, var(--edge) 55%, #000) 100%),
-    /* back lip lit, front wall in shade */
-    linear-gradient(180deg,
-      color-mix(in srgb, var(--face) 70%, #fff) 0%,
-      var(--face) 9%,
-      var(--face) 55%,
-      var(--edge) 72%,
-      color-mix(in srgb, var(--edge) 78%, #000) 100%);
-  box-shadow:
-    inset 0 0.08cqw 0 rgba(255, 255, 255, 0.55),
-    inset 0 -0.12cqw 0 rgba(0, 0, 0, 0.35),
-    0 calc(0.25cqw + var(--lift) * 0.35) calc(0.5cqw + var(--lift) * 0.6) rgba(0, 0, 0, 0.55),
-    0 0.08cqw 0.12cqw rgba(0, 0, 0, 0.6);
 }
-/* dished top surface */
+.key-shadow {
+  position: absolute; left: 7%; right: 7%; bottom: 3%; height: 34%; border-radius: 30%;
+  box-shadow: 0 calc(0.3cqw + var(--lift) * 0.3) calc(0.6cqw + var(--lift) * 0.5) rgba(0, 0, 0, 0.7);
+  transition: box-shadow 0.4s var(--spring);
+}
+.key-body { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* dye-sub print on the top surface: flat, one colour, no shadow */
 .key-top {
-  position: absolute; top: var(--top-t); left: var(--top-x); right: var(--top-x); bottom: var(--top-b);
-  border-radius: var(--top-rad);
-  display: grid; place-items: center;
-  background:
-    radial-gradient(70% 60% at 50% 42%, rgba(0, 0, 0, 0.1), transparent 70%),
-    radial-gradient(90% 70% at 30% 18%, rgba(255, 255, 255, 0.38), transparent 60%),
-    linear-gradient(180deg, color-mix(in srgb, var(--face) 90%, #fff), var(--face) 45%, color-mix(in srgb, var(--face) 93%, #000));
-  box-shadow:
-    inset 0 0.1cqw 0.12cqw rgba(0, 0, 0, 0.16),
-    inset 0 -0.08cqw 0 rgba(255, 255, 255, 0.35),
-    0 0.1cqw 0.05cqw rgba(255, 255, 255, 0.28),
-    0 -0.06cqw 0.1cqw rgba(0, 0, 0, 0.12);
+  position: absolute; left: var(--tl); right: var(--tr); top: var(--tt); bottom: var(--tb);
+  display: grid; place-items: center; color: var(--ink); border-radius: 0.8cqw;
 }
-/* front wall: the legend is printed here */
+.key-icon { display: block; width: 3cqw; height: 3cqw; }
+.key-icon svg { width: 100%; height: 100%; stroke-width: 2.1; }
+/* legend printed on the front wall */
 .key-front {
-  position: absolute; left: 9%; right: 9%; bottom: 0; height: var(--top-b);
-  display: flex; align-items: center; justify-content: center; padding-top: 0.15cqw;
+  position: absolute; left: 10%; right: 10%; bottom: 4%; height: 24%;
+  display: flex; align-items: center; justify-content: center;
 }
-.key-icon { display: block; width: 3.3cqw; height: 3.3cqw; filter: drop-shadow(0 0.06cqw 0 rgba(255, 255, 255, 0.3)); }
-.key-icon svg { width: 100%; height: 100%; stroke-width: 2; }
 .key-label {
-  font-size: 0.98cqw; font-weight: 600; line-height: 1; letter-spacing: 0; white-space: nowrap;
-  font-variation-settings: 'wdth' 86; color: var(--ink);
+  font-size: 0.95cqw; font-weight: 600; line-height: 1; white-space: nowrap; color: var(--legend);
+  font-variation-settings: 'wdth' 88;
 }
-/* legends sit on the shaded front wall: pick the ink that reaches 4.5:1 there */
-.key[data-key='insider'] .key-label { color: #140602; }
-.key[data-key='icron'] .key-label, .key[data-key='cv'] .key-label,
-.key[data-key='education'] .key-label, .key[data-key='linkedin'] .key-label { color: #0d0502; }
-.key[data-key='portakasa'] .key-label, .key[data-key='skills'] .key-label, .key[data-key='about'] .key-label { color: #fff; }
 .key-hint {
-  position: absolute; right: calc(var(--top-x) + 0.5cqw); top: calc(var(--top-t) + 0.4cqw);
-  font-family: var(--mono); font-size: 0.72cqw; line-height: 1; opacity: 0.6;
+  position: absolute; right: calc(var(--tr) + 0.45cqw); top: calc(var(--tt) + 0.4cqw);
+  font-family: var(--mono); font-size: 0.7cqw; line-height: 1; color: var(--ink); opacity: 0.5;
 }
-.key-sm .key-icon { width: 2.35cqw; height: 2.35cqw; }
-.key-sm .key-label { font-size: 0.7cqw; }
-.key-sm .key-hint { font-size: 0.6cqw; right: calc(var(--top-x) + 0.35cqw); top: calc(var(--top-t) + 0.3cqw); }
-
-/* long return key: dark cap, legend on top */
-.key-bar .key-top { display: flex; justify-content: space-between; padding: 0 1.4cqw; }
-.key-bar .key-front { display: none; }
-.key-bar .key-icon { width: 2.9cqw; height: 2.9cqw; }
-.key-bar .key-label { font-size: 1.3cqw; letter-spacing: 0.02em; color: #fff; }
-.key-bar .key-cap {
-  background:
-    linear-gradient(90deg, #4a4a4a 0%, #343434 6%, transparent 13%, transparent 86%, #0c0c0c 94%, #050505 100%),
-    linear-gradient(180deg, #4b4b4b 0%, #2a2a2a 10%, #242424 55%, #151515 72%, #0b0b0b 100%);
-}
-.key-bar .key-top {
-  background:
-    radial-gradient(70% 60% at 50% 42%, rgba(0, 0, 0, 0.18), transparent 70%),
-    radial-gradient(90% 80% at 25% 15%, rgba(255, 255, 255, 0.12), transparent 60%),
-    linear-gradient(180deg, #343434, #262626 45%, #1e1e1e);
-}
+.key-sm .key-icon { width: 2.2cqw; height: 2.2cqw; }
+.key-sm .key-label { font-size: 0.72cqw; }
+.key-sm .key-hint { font-size: 0.56cqw; right: calc(var(--tr) + 0.3cqw); top: calc(var(--tt) + 0.3cqw); }
+/* long return key: legends on the top surface */
+.key-bar .key-top { display: flex; justify-content: space-between; padding: 0 1.3cqw; }
+.key-bar .key-icon { width: 2.3cqw; height: 2.3cqw; }
+.key-bar .key-label { font-size: 1.25cqw; color: #f2f2f2; }
 
 @media (hover: hover) {
   .key:hover { --lift: 2cqw; }
   .key:hover .key-led { opacity: 1; }
 }
 .key:focus-visible { --lift: 2cqw; }
-.key:focus-visible .key-top { outline: 0.2cqw solid var(--cream); outline-offset: 0.25cqw; }
+.key:focus-visible .key-top { outline: 0.2cqw solid var(--cream); outline-offset: 0.5cqw; }
 .key:focus-visible .key-led { opacity: 1; }
 .key.is-down, .key:active { --lift: 0.05cqw; }
 .key.is-down .key-cap, .key:active .key-cap { transition-duration: 0.08s; transition-timing-function: ease-out; }
@@ -350,19 +303,19 @@ main, .foot { position: relative; z-index: 1; }
 }
 
 @container (max-width: 700px) {
-  .key-front, .key-hint { display: none; }
-  .key { --top-b: 15%; --top-t: 6%; --top-x: 9%; }
-  .key-sm { --top-x: 8%; }
-  .key-icon { width: 4.6cqw; height: 4.6cqw; }
-  .key-sm .key-icon { width: 3.5cqw; height: 3.5cqw; }
-  .key-bar .key-icon { width: 4cqw; height: 4cqw; }
-  .key-bar .key-label { font-size: 2.1cqw; }
+  .key-hint { display: none; }
+  .key-icon { width: 4cqw; height: 4cqw; }
+  .key-sm .key-icon { width: 3cqw; height: 3cqw; }
+  .key-label { font-size: 1.35cqw; }
+  .key-sm .key-label { font-size: 1.05cqw; }
+  .key-bar .key-icon { width: 3.2cqw; height: 3.2cqw; }
+  .key-bar .key-label { font-size: 2cqw; }
   .screen { top: 17.1%; height: 17.2%; }
   .scr-meta { font-size: 1.9cqw; line-height: 1; }
   .scr-meta-extra { display: none; }
   .scr-title { font-size: 4.2cqw; line-height: 1; min-height: 0; flex: none; }
   .scr-desc {
-    font-size: 2.3cqw; line-height: 1.02; flex: none; white-space: normal; text-overflow: clip;
+    font-size: 2.3cqw; line-height: 1.02; flex: none; white-space: normal; text-overflow: clip; text-wrap: balance;
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
   }
   .screen:hover .scr-desc, .screen:focus-within .scr-desc { display: -webkit-box; }

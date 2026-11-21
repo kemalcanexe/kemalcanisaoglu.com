@@ -3,6 +3,7 @@ import { Picture, getImage } from 'astro:assets';
 import device from '../assets/device.png';
 import { KEYS, pct } from '../data/keys';
 import { ICONS } from '../data/icons';
+import { keycap } from '../data/keycap';
 import { dict, type Lang } from '../i18n/content';
 
 interface Props { lang: Lang }
@@ -57,13 +58,17 @@ const screenData = {
     <nav class="keys" aria-label={t.device.label}>
       {KEYS.map((k, i) => {
         const p = pct(k);
-        const style = `--l:${p.left}%;--t:${p.top}%;--w:${p.width}%;--h:${p.height}%;--face:${k.face};--edge:${k.edge};--ink:${k.ink};--i:${i}`;
+        const cap = keycap(k.id, k.w, k.h, k.face, k.edge, k.size === 'bar');
+        const style = `--l:${p.left}%;--t:${p.top}%;--w:${p.width}%;--h:${p.height}%;--face:${k.face};--edge:${k.edge};--ink:${k.ink};--legend:${k.legend};--i:${i};` +
+          `--tl:${cap.top.l.toFixed(2)}%;--tr:${cap.top.r.toFixed(2)}%;--tt:${cap.top.t.toFixed(2)}%;--tb:${cap.top.b.toFixed(2)}%`;
         const label = t.keys[k.id].label;
         const inner = (
           <Fragment>
             <span class="key-stem" aria-hidden="true"></span>
             <span class="key-led" aria-hidden="true"></span>
+            <span class="key-shadow" aria-hidden="true"></span>
             <span class="key-cap" aria-hidden="true">
+              <Fragment set:html={cap.svg} />
               <span class="key-top">
                 <span class="key-icon" set:html={ICONS[k.id]} />
                 {k.size === 'bar' && <span class="key-label">{label}</span>}
