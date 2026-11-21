@@ -28,7 +28,7 @@ export interface KeyText { label: string; screen: string; desc: string }
 
 interface Dict {
   meta: { title: string; description: string; ogAlt: string };
-  nav: { work: string; about: string; experience: string; contact: string; talk: string; sound: string; soundOn: string; soundOff: string; lang: string; langHref: string; langLabel: string; skip: string; menu: string };
+  nav: { work: string; about: string; experience: string; contact: string; talk: string; sound: string; soundOn: string; soundOff: string; lang: string; langHref: string; langLabel: string; skip: string; menu: string; role: string };
   hero: { name: string; sub: string };
   screen: { meta: string; title: string; desc: string; typing: string; ready: string; prompt: string; hint: string };
   device: { label: string };
@@ -56,7 +56,7 @@ const en: Dict = {
   nav: {
     work: 'Work', about: 'About', experience: 'Experience', contact: 'Contact', talk: 'Let’s talk',
     sound: 'Key sound', soundOn: 'Key sound on', soundOff: 'Key sound off',
-    lang: 'TR', langHref: '/tr/', langLabel: 'Türkçe', skip: 'Skip to content', menu: 'Main',
+    lang: 'TR', langHref: '/tr/', langLabel: 'Türkçe', skip: 'Skip to content', menu: 'Main', role: 'Product management',
   },
   hero: {
     name: 'Kemal Can İsaoğlu',
@@ -75,7 +75,7 @@ const en: Dict = {
     insider: {
       name: 'Insider One',
       role: 'Product Management Intern',
-      when: 'Jul 2026 – now, Remote',
+      when: 'Jul 2026 – now, Remote',
       line: 'I run product work for external integrations on a global B2B customer-experience platform: data warehouses, zero-copy data sharing and ad platforms.',
       stats: [
         { n: '25+', label: 'development-ready Jira tasks' },
@@ -91,7 +91,7 @@ const en: Dict = {
     portakasa: {
       name: 'Portakasa',
       role: 'Founder',
-      when: 'Aug 2026 – now, Istanbul',
+      when: 'Aug 2026 – now, Istanbul',
       line: 'A pre-accounting SaaS for small businesses. I founded it and built the product end to end with Claude Code.',
       stats: [],
       points: [
@@ -107,7 +107,7 @@ const en: Dict = {
       {
         title: 'Work',
         items: [
-          { when: 'Jul 2026 – now', what: 'Product Management Intern', where: 'Insider One', place: 'Remote', key: 'insider', points: [
+          { when: 'Jul 2026 – now', what: 'Product Management Intern', where: 'Insider One', place: 'Remote', key: 'insider', points: [
             'Manage product work for external integrations: data warehouse import/export, zero-copy data sharing and ad platforms.',
             'Run discovery and write the product vision for a new ad-platform lead-import integration.',
             'Triage and prioritise customer requests; wrote 25+ development-ready Jira tasks with acceptance criteria and run UAT before release.',
@@ -115,11 +115,11 @@ const en: Dict = {
             'Prepare go-to-market material: sprint reviews, feature announcements and 20+ help-center updates with Product Education.',
             'Built 7 AI-assisted workflow automations with Claude Code for ticket triage, release-readiness checks and documentation audits.',
           ] },
-          { when: 'Aug 2026 – now', what: 'Founder', where: 'Portakasa', place: 'Istanbul', key: 'portakasa', points: [
+          { when: 'Aug 2026 – now', what: 'Founder', where: 'Portakasa', place: 'Istanbul', key: 'portakasa', points: [
             'Founded a pre-accounting SaaS startup and built the product end to end with Claude Code; own discovery, roadmap and delivery.',
             'Running a development beta with the first customer and shaping the roadmap from their feedback.',
           ] },
-          { when: 'Jun 2025 – Jul 2026', what: 'Technical Product Management Intern', where: 'ICRON Technologies', place: 'Istanbul', key: 'icron', points: [
+          { when: 'Jun 2025 – Jul 2026', what: 'Technical Product Management Intern', where: 'ICRON Technologies', place: 'Istanbul', key: 'icron', points: [
             'Wrote technical design documents, API documentation and UAT plans for the Demand Planning and Workforce Management modules.',
             'Supported demand forecasting, supply-demand matching and S&OP implementations for Şişecam, Tüpraş and Akbank.',
             'Defined acceptance criteria and test scenarios; managed engineering and business follow-ups in Azure DevOps.',
@@ -130,19 +130,19 @@ const en: Dict = {
       {
         title: 'Leadership',
         items: [
-          { when: 'Jun 2023 – May 2026', what: 'President, Student Union', where: 'Turkish Education Association', place: 'Istanbul', key: 'leadership', points: [
+          { when: 'Jun 2023 – May 2026', what: 'President, Student Union', where: 'Turkish Education Association', place: 'Istanbul', key: 'leadership', points: [
             'Led union strategy and all committees as president (May 2025 – May 2026) after serving as vice president and finance and fundraising board member.',
           ] },
-          { when: 'May 2023 – Jun 2025', what: 'Head of MarketTalks and External Affairs', where: 'Marketing Club of Koç University', key: 'leadership', points: [
+          { when: 'May 2023 – Jun 2025', what: 'Head of MarketTalks and External Affairs', where: 'Marketing Club of Koç University', key: 'leadership', points: [
             'Ran the seminar series end to end, managed sponsor and speaker outreach, and coordinated the Kamp’24 and Kamp’25 operations committees.',
           ] },
-          { when: 'Oct 2026 – now', what: 'Career Ambassador', where: 'Koç University', key: 'leadership', points: [
+          { when: 'Oct 2026 – now', what: 'Career Ambassador', where: 'Koç University', key: 'leadership', points: [
             'Mentor first- and second-year students one-on-one on internship search, CVs and career planning.',
           ] },
-          { when: 'Sep 2025 – now', what: 'Resident Assistant', where: 'Koç University', key: 'leadership', points: [
+          { when: 'Sep 2025 – now', what: 'Resident Assistant', where: 'Koç University', key: 'leadership', points: [
             'Manage floor operations and conflict resolution for undergraduate residents.',
           ] },
-          { when: 'Jun 2024 – Sep 2025', what: 'Freshman Student Mentor', where: 'Koç University', key: 'leadership', points: [
+          { when: 'Jun 2024 – Sep 2025', what: 'Freshman Student Mentor', where: 'Koç University', key: 'leadership', points: [
             'Guided first-year engineering students through academic planning and campus life.',
           ] },
         ],
@@ -150,10 +150,10 @@ const en: Dict = {
       {
         title: 'Education',
         items: [
-          { when: 'Sep 2022 – 2027', what: 'B.S. Industrial Engineering and B.S. Computer Science and Engineering', where: 'Koç University', place: 'Istanbul', key: 'education', points: [
+          { when: 'Sep 2022 – 2027', what: 'B.S. Industrial Engineering and B.S. Computer Science and Engineering', where: 'Koç University', place: 'Istanbul', key: 'education', points: [
             'Double major, full merit scholarship. Graduating in 2027.',
           ] },
-          { when: 'Sep 2018 – Jun 2022', what: 'High School Diploma', where: 'TED Konya College', key: 'education', points: [
+          { when: 'Sep 2018 – Jun 2022', what: 'High School Diploma', where: 'TED Konya College', key: 'education', points: [
             'Full education scholarship.',
           ] },
         ],
@@ -184,7 +184,7 @@ const en: Dict = {
   modals: {
     insider: {
       title: 'Insider One',
-      meta: 'Product Management Intern, Jul 2026 – now, Remote',
+      meta: 'Product Management Intern, Jul 2026 – now, Remote',
       lead: 'I manage product work for external platform integrations on a global B2B customer-experience platform, with engineering, design and customer success.',
       stats: [
         { n: '25+', label: 'Jira tasks, scoped and development-ready' },
@@ -214,7 +214,7 @@ const en: Dict = {
     },
     portakasa: {
       title: 'Portakasa',
-      meta: 'Founder, Aug 2026 – now, Istanbul',
+      meta: 'Founder, Aug 2026 – now, Istanbul',
       lead: 'A pre-accounting SaaS for small businesses in Turkey. I founded it and built the product end to end with Claude Code, from discovery to delivery.',
       stats: [
         { n: '1st', label: 'customer in a development beta' },
@@ -244,7 +244,7 @@ const en: Dict = {
     },
     icron: {
       title: 'ICRON Technologies',
-      meta: 'Technical Product Management Intern, Jun 2025 – Jul 2026, Istanbul',
+      meta: 'Technical Product Management Intern, Jun 2025 – Jul 2026, Istanbul',
       lead: 'Supply chain planning for enterprise clients including Şişecam, Tüpraş and Akbank.',
       blocks: [
         {
@@ -369,7 +369,7 @@ const tr: Dict = {
   nav: {
     work: 'İşler', about: 'Hakkımda', experience: 'Deneyim', contact: 'İletişim', talk: 'Konuşalım',
     sound: 'Tuş sesi', soundOn: 'Tuş sesi açık', soundOff: 'Tuş sesi kapalı',
-    lang: 'EN', langHref: '/', langLabel: 'English', skip: 'İçeriğe geç', menu: 'Ana menü',
+    lang: 'EN', langHref: '/', langLabel: 'English', skip: 'İçeriğe geç', menu: 'Ana menü', role: 'Ürün yönetimi',
   },
   hero: {
     name: 'Kemal Can İsaoğlu',
@@ -388,7 +388,7 @@ const tr: Dict = {
     insider: {
       name: 'Insider One',
       role: 'Ürün Yönetimi Stajyeri',
-      when: 'Tem 2026 – devam, Uzaktan',
+      when: 'Tem 2026 – devam, Uzaktan',
       line: 'Global bir B2B müşteri deneyimi platformunda dış entegrasyonların ürün tarafını yürütüyorum: veri ambarları, sıfır kopya veri paylaşımı ve reklam platformları.',
       stats: [
         { n: '25+', label: 'geliştirmeye hazır Jira görevi' },
@@ -404,7 +404,7 @@ const tr: Dict = {
     portakasa: {
       name: 'Portakasa',
       role: 'Kurucu',
-      when: 'Ağu 2026 – devam, İstanbul',
+      when: 'Ağu 2026 – devam, İstanbul',
       line: 'Küçük işletmeler için bir ön muhasebe SaaS’ı. Şirketi kurdum, ürünü Claude Code ile uçtan uca geliştirdim.',
       stats: [],
       points: [
@@ -420,7 +420,7 @@ const tr: Dict = {
       {
         title: 'İş',
         items: [
-          { when: 'Tem 2026 – devam', what: 'Ürün Yönetimi Stajyeri', where: 'Insider One', place: 'Uzaktan', key: 'insider', points: [
+          { when: 'Tem 2026 – devam', what: 'Ürün Yönetimi Stajyeri', where: 'Insider One', place: 'Uzaktan', key: 'insider', points: [
             'Dış entegrasyonların ürün işlerini yürütüyorum: veri ambarı içe ve dışa aktarım, sıfır kopya veri paylaşımı ve reklam platformları.',
             'Yeni bir reklam platformu lead aktarım entegrasyonu için keşfi yürütüyor, ürün vizyonunu yazıyorum.',
             'Müşteri taleplerini önceliklendiriyorum; kabul kriterleri net 25+ geliştirmeye hazır Jira görevi yazdım, sürümden önce UAT yürütüyorum.',
@@ -428,11 +428,11 @@ const tr: Dict = {
             'Ürün Eğitimi ekibiyle pazara çıkış materyallerini hazırlıyorum: sprint değerlendirmeleri, özellik duyuruları ve 20+ yardım merkezi güncellemesi.',
             'Claude Code ile talep triyajı, sürüm hazırlık kontrolü ve doküman denetimi için 7 yapay zekâ destekli iş akışı otomasyonu kurdum.',
           ] },
-          { when: 'Ağu 2026 – devam', what: 'Kurucu', where: 'Portakasa', place: 'İstanbul', key: 'portakasa', points: [
+          { when: 'Ağu 2026 – devam', what: 'Kurucu', where: 'Portakasa', place: 'İstanbul', key: 'portakasa', points: [
             'Bir ön muhasebe SaaS girişimi kurdum ve ürünü Claude Code ile uçtan uca geliştirdim; keşif, yol haritası ve teslim bende.',
             'İlk müşteriyle geliştirme betasını yürütüyor, yol haritasını geri bildirimlerine göre şekillendiriyorum.',
           ] },
-          { when: 'Haz 2025 – Tem 2026', what: 'Teknik Ürün Yönetimi Stajyeri', where: 'ICRON Technologies', place: 'İstanbul', key: 'icron', points: [
+          { when: 'Haz 2025 – Tem 2026', what: 'Teknik Ürün Yönetimi Stajyeri', where: 'ICRON Technologies', place: 'İstanbul', key: 'icron', points: [
             'Talep Planlama ve İşgücü Yönetimi modülleri için teknik tasarım dokümanları, API dokümantasyonu ve UAT planları yazdım.',
             'Şişecam, Tüpraş ve Akbank için talep tahmini, arz-talep eşleştirme ve S&OP uygulamalarına destek verdim.',
             'Kabul kriterleri ve test senaryoları tanımladım; mühendislik ve iş birimi takiplerini Azure DevOps’ta yürüttüm.',
@@ -443,19 +443,19 @@ const tr: Dict = {
       {
         title: 'Liderlik',
         items: [
-          { when: 'Haz 2023 – May 2026', what: 'Öğrenci Birliği Başkanı', where: 'Türk Eğitim Derneği', place: 'İstanbul', key: 'leadership', points: [
+          { when: 'Haz 2023 – May 2026', what: 'Öğrenci Birliği Başkanı', where: 'Türk Eğitim Derneği', place: 'İstanbul', key: 'leadership', points: [
             'Başkan yardımcılığı ile finans ve kaynak geliştirme kurulu üyeliğinin ardından başkan olarak (May 2025 – May 2026) birliğin stratejisini ve tüm komitelerini yönettim.',
           ] },
-          { when: 'May 2023 – Haz 2025', what: 'MarketTalks ve Dış İlişkiler Sorumlusu', where: 'Koç Üniversitesi Pazarlama Kulübü', key: 'leadership', points: [
+          { when: 'May 2023 – Haz 2025', what: 'MarketTalks ve Dış İlişkiler Sorumlusu', where: 'Koç Üniversitesi Pazarlama Kulübü', key: 'leadership', points: [
             'Seminer serisini baştan sona yürüttüm, sponsor ve konuşmacı iletişimini yönettim, Kamp’24 ve Kamp’25 operasyon komitelerini koordine ettim.',
           ] },
-          { when: 'Eki 2026 – devam', what: 'Kariyer Elçisi', where: 'Koç Üniversitesi', key: 'leadership', points: [
+          { when: 'Eki 2026 – devam', what: 'Kariyer Elçisi', where: 'Koç Üniversitesi', key: 'leadership', points: [
             'Birinci ve ikinci sınıf öğrencilerine staj arayışı, CV ve kariyer planlaması üzerine birebir mentorluk yapıyorum.',
           ] },
-          { when: 'Eyl 2025 – devam', what: 'Yurt Asistanı', where: 'Koç Üniversitesi', key: 'leadership', points: [
+          { when: 'Eyl 2025 – devam', what: 'Yurt Asistanı', where: 'Koç Üniversitesi', key: 'leadership', points: [
             'Lisans öğrencileri için kat operasyonlarını ve anlaşmazlık çözümünü yürütüyorum.',
           ] },
-          { when: 'Haz 2024 – Eyl 2025', what: 'Birinci Sınıf Mentoru', where: 'Koç Üniversitesi', key: 'leadership', points: [
+          { when: 'Haz 2024 – Eyl 2025', what: 'Birinci Sınıf Mentoru', where: 'Koç Üniversitesi', key: 'leadership', points: [
             'Birinci sınıf mühendislik öğrencilerine ders planlaması ve kampüse uyum konusunda rehberlik ettim.',
           ] },
         ],
@@ -463,10 +463,10 @@ const tr: Dict = {
       {
         title: 'Eğitim',
         items: [
-          { when: 'Eyl 2022 – 2027', what: 'Endüstri Mühendisliği ve Bilgisayar Mühendisliği', where: 'Koç Üniversitesi', place: 'İstanbul', key: 'education', points: [
+          { when: 'Eyl 2022 – 2027', what: 'Endüstri Mühendisliği ve Bilgisayar Mühendisliği', where: 'Koç Üniversitesi', place: 'İstanbul', key: 'education', points: [
             'Çift anadal, tam başarı bursu. 2027’de mezun oluyorum.',
           ] },
-          { when: 'Eyl 2018 – Haz 2022', what: 'Lise Diploması', where: 'TED Konya Koleji', key: 'education', points: [
+          { when: 'Eyl 2018 – Haz 2022', what: 'Lise Diploması', where: 'TED Konya Koleji', key: 'education', points: [
             'Tam eğitim bursu.',
           ] },
         ],
@@ -497,7 +497,7 @@ const tr: Dict = {
   modals: {
     insider: {
       title: 'Insider One',
-      meta: 'Ürün Yönetimi Stajyeri, Tem 2026 – devam, Uzaktan',
+      meta: 'Ürün Yönetimi Stajyeri, Tem 2026 – devam, Uzaktan',
       lead: 'Global bir B2B müşteri deneyimi platformunda dış platform entegrasyonlarının ürün işlerini mühendislik, tasarım ve müşteri başarısı ekipleriyle birlikte yürütüyorum.',
       stats: [
         { n: '25+', label: 'kapsamı net, geliştirmeye hazır Jira görevi' },
@@ -527,7 +527,7 @@ const tr: Dict = {
     },
     portakasa: {
       title: 'Portakasa',
-      meta: 'Kurucu, Ağu 2026 – devam, İstanbul',
+      meta: 'Kurucu, Ağu 2026 – devam, İstanbul',
       lead: 'Türkiye’deki küçük işletmeler için bir ön muhasebe SaaS’ı. Şirketi kurdum, ürünü keşiften teslime kadar Claude Code ile uçtan uca geliştirdim.',
       stats: [
         { n: '1.', label: 'müşteriyle geliştirme betası' },
@@ -557,7 +557,7 @@ const tr: Dict = {
     },
     icron: {
       title: 'ICRON Technologies',
-      meta: 'Teknik Ürün Yönetimi Stajyeri, Haz 2025 – Tem 2026, İstanbul',
+      meta: 'Teknik Ürün Yönetimi Stajyeri, Haz 2025 – Tem 2026, İstanbul',
       lead: 'Şişecam, Tüpraş ve Akbank gibi kurumsal müşteriler için tedarik zinciri planlama.',
       blocks: [
         {

@@ -80,11 +80,23 @@ ul, ol { padding: 0; list-style: none; }
     .top { background: rgba(17, 17, 19, 0.72); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); }
   }
 }
-.mark {
-  font-weight: 600; font-size: 1.5rem; letter-spacing: -0.03em; text-decoration: none;
-  font-variation-settings: 'wdth' 85; justify-self: start;
+.mark { display: flex; align-items: center; gap: 12px; text-decoration: none; justify-self: start; }
+/* a miniature of the console screen: types and erases */
+.mark-scr {
+  display: inline-flex; align-items: center; gap: 3px; height: 34px; min-width: 86px; padding: 0 10px;
+  border-radius: 8px; background: linear-gradient(180deg, #0d0d0e, #19191a);
+  box-shadow: 0 0 0 2px #3a3a3d, 0 0 0 3px #1b1b1d, inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.45);
+  font-family: var(--mono); font-weight: 700; font-size: 16px; line-height: 1; color: var(--cream);
+  text-shadow: 0 0 6px rgba(253, 227, 207, 0.35); letter-spacing: 0.02em; white-space: pre;
 }
-.mark span { color: var(--orange); }
+.mark-car {
+  display: inline-block; width: 6px; height: 15px; background: var(--amber);
+  box-shadow: 0 0 5px rgba(248, 169, 31, 0.7); animation: blink 1.05s steps(1) infinite;
+}
+.mark-name { display: grid; font-size: 0.9375rem; font-weight: 500; line-height: 1.15; color: var(--text); }
+.mark-name span { font-size: 0.8125rem; font-weight: 400; color: var(--muted); }
+.mark:hover .mark-scr { box-shadow: 0 0 0 2px #4a4a4e, 0 0 0 3px #1b1b1d, inset 0 2px 6px rgba(0, 0, 0, 0.8), 0 4px 10px rgba(0, 0, 0, 0.45); }
+@media (max-width: 760px) { .mark-name { display: none; } }
 .nav { display: flex; gap: clamp(14px, 2.4vw, 34px); }
 .nav a, .lang, .foot a {
   text-decoration: none; color: var(--muted); font-size: 1rem; letter-spacing: 0; transition: color 0.2s;
@@ -345,16 +357,17 @@ main, .foot { position: relative; z-index: 1; }
   .key-sm .key-icon { width: 3.5cqw; height: 3.5cqw; }
   .key-bar .key-icon { width: 4cqw; height: 4cqw; }
   .key-bar .key-label { font-size: 2.1cqw; }
-  .scr-meta { font-size: 1.9cqw; line-height: 1.1; }
+  .screen { top: 17.1%; height: 17.2%; }
+  .scr-meta { font-size: 1.9cqw; line-height: 1; }
   .scr-meta-extra { display: none; }
-  .scr-title { font-size: 4.6cqw; line-height: 1.05; min-height: 0; }
+  .scr-title { font-size: 4.2cqw; line-height: 1; min-height: 0; flex: none; }
   .scr-desc {
-    font-size: 2.4cqw; line-height: 1.15; white-space: normal; text-overflow: clip;
+    font-size: 2.3cqw; line-height: 1.02; flex: none; white-space: normal; text-overflow: clip;
     display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow: hidden;
   }
   .screen:hover .scr-desc, .screen:focus-within .scr-desc { display: -webkit-box; }
   .screen:hover .scr-term, .screen:focus-within .scr-term { display: none; }
-  .screen-glass { padding: 0.2cqw 2cqw; gap: 0.2cqw; }
+  .screen-glass { padding: 0.4cqw 2cqw 0.2cqw; gap: 0; }
 }
 
 /* ───────── sections ───────── */
@@ -435,7 +448,7 @@ main, .foot { position: relative; z-index: 1; }
   padding: 24px 0; border-bottom: 1px solid var(--line);
 }
 .tl-when { color: var(--muted); font-size: 0.875rem; font-variant-numeric: tabular-nums; padding-top: 3px; }
-.tl-when span { display: block; font-size: 0.875rem; opacity: 0.8; }
+.tl-when span { display: block; font-size: 0.875rem;  }
 .tl-body { max-width: 74ch; }
 .tl-what { font-size: 1.125rem; font-weight: 500; letter-spacing: 0; line-height: 1.3; }
 .tl-where { display: flex; align-items: center; gap: 9px; color: #cfc8c1; margin-top: 3px; }
@@ -597,7 +610,7 @@ main, .foot { position: relative; z-index: 1; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  .caret { animation: none; }
+  .caret, .mark-car { animation: none; }
   .key.wave .key-cap { animation: none; }
   .dock { transform: none; }
   .glow, .sheen { display: none; }

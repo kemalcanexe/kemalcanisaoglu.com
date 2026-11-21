@@ -457,6 +457,31 @@ window.addEventListener('scroll', () => {
   requestAnimationFrame(() => { top?.classList.toggle('scrolled', scrollY > 8); ticking = false; });
 }, { passive: true });
 
+/* ───────── logo: mini screen that types and erases ───────── */
+const markEl = $('[data-mark]');
+if (markEl && !reduced) {
+  const words = ['KCİ', 'kemal'];
+  let w = 0;
+  const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+  const visible = () => new Promise<void>((r) => {
+    if (!document.hidden) return r();
+    document.addEventListener('visibilitychange', function f() { if (!document.hidden) { document.removeEventListener('visibilitychange', f); r(); } });
+  });
+  (async () => {
+    await wait(2600);
+    for (;;) {
+      const cur = Array.from(words[w]);
+      for (let i = cur.length; i >= 0; i--) { markEl.textContent = cur.slice(0, i).join(''); await wait(70); }
+      await wait(380);
+      w = (w + 1) % words.length;
+      const next = Array.from(words[w]);
+      for (let i = 1; i <= next.length; i++) { markEl.textContent = next.slice(0, i).join(''); await wait(120); }
+      await wait(3200);
+      await visible();
+    }
+  })();
+}
+
 /* ───────── boot ───────── */
 let booted = false;
 const boot = () => {
