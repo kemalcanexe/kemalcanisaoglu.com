@@ -544,3 +544,11 @@ main, .foot { position: relative; z-index: 1; }
   .tl-item.deep .tl-points li:nth-child(n + 3) { display: none; }
 }
 @media (max-width: 760px) { .top { background: rgba(17, 17, 19, 0.97); } }
+
+/* the console breathes: a slow, small float (uses `translate`, so it stacks on the tilt transform) */
+.console.ready .tilt { animation: breathe 6.5s ease-in-out 1.2s infinite; }
+@keyframes breathe {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -0.55cqw; }
+}
+@media (prefers-reduced-motion: reduce) { .console.ready .tilt { animation: none; } }
