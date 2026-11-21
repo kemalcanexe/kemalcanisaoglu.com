@@ -2,13 +2,18 @@
 import { Picture, getImage } from 'astro:assets';
 import device from '../assets/device.png';
 import { KEYS, pct } from '../data/keys';
-import { ICONS } from '../data/icons';
-import { keycap } from '../data/keycap';
+import type { ImageMetadata } from 'astro';
 import { dict, type Lang } from '../i18n/content';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = dict[lang];
+
+// Photoreal keycaps, pre-rendered (tools/keycaps) with the photo's camera and light.
+const capFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/keys/*/*.png', { eager: true });
+const capImg = (id: string) => capFiles[`../assets/keys/${lang}/${id}.png`].default;
+const CAP_W = { lg: [160, 240, 320, 480, 640], sm: [120, 180, 240, 360, 480], bar: [400, 600, 800, 1200, 1600] } as const;
+const CAP_SIZES = { lg: 'min(14vw, 200px)', sm: 'min(9vw, 130px)', bar: 'min(32vw, 460px)' } as const;
 
 // Low-res alpha copy used only as a mask for the moving light.
 const mask = await getImage({ src: device, width: 640, format: 'webp', quality: 60 });
@@ -58,23 +63,15 @@ const screenData = {
     <nav class="keys" aria-label={t.device.label}>
       {KEYS.map((k, i) => {
         const p = pct(k);
-        const cap = keycap(k.id, k.w, k.h, k.face, k.edge, k.size === 'bar');
-        const style = `--l:${p.left}%;--t:${p.top}%;--w:${p.width}%;--h:${p.height}%;--face:${k.face};--edge:${k.edge};--ink:${k.ink};--legend:${k.legend};--i:${i};` +
-          `--tl:${cap.top.l.toFixed(2)}%;--tr:${cap.top.r.toFixed(2)}%;--tt:${cap.top.t.toFixed(2)}%;--tb:${cap.top.b.toFixed(2)}%`;
+        const style = `--l:${p.left}%;--t:${p.top}%;--w:${p.width}%;--h:${p.height}%;--i:${i}`;
         const label = t.keys[k.id].label;
         const inner = (
           <Fragment>
-            <span class="key-stem" aria-hidden="true"></span>
             <span class="key-led" aria-hidden="true"></span>
             <span class="key-shadow" aria-hidden="true"></span>
             <span class="key-cap" aria-hidden="true">
-              <Fragment set:html={cap.svg} />
-              <span class="key-top">
-                <span class="key-icon" set:html={ICONS[k.id]} />
-                {k.size === 'bar' && <span class="key-label">{label}</span>}
-              </span>
-              {k.size !== 'bar' && <span class="key-front"><span class="key-label">{label}</span></span>}
-              {k.size !== 'bar' && <span class="key-hint">{k.shortcut}</span>}
+              <Picture src={capImg(k.id)} formats={['avif', 'webp']} widths={[...CAP_W[k.size]]} sizes={CAP_SIZES[k.size]} quality={90}
+                       alt="" loading="eager" decoding="async" draggable="false" class="key-img" />
             </span>
           </Fragment>
         );

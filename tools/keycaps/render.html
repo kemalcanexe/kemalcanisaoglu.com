@@ -1,0 +1,173 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>body{margin:0;background:transparent}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const P = window.PARAMS; // injected
+const font = new FontFace('B', `url(${P.fontUrl})`, { weight: '200 800' });
+await font.load(); document.fonts.add(font);
+const fontX = new FontFace('B', `url(brico-x.woff2)`, { weight: '200 800', unicodeRange: 'U+0100-024F' }); await fontX.load(); document.fonts.add(fontX);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = P.exposure;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0x000000, 0);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environmentIntensity = P.envIntensity;
+
+// key light: soft, warm-neutral, from upper left and slightly behind (matches the case highlights)
+const key = new THREE.DirectionalLight(0xfff4ea, P.keyLight); key.position.set(-9, 9, 3); scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe6ff, P.fillLight); fill.position.set(9, 3, 6); scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffffff, P.rimLight); rim.position.set(0, 5, -10); scene.add(rim);
+
+/* ---------- geometry: lofted Cherry-like cap ---------- */
+function rrect(w, d, r, n = 10) {
+  const pts = []; const hw = w / 2, hd = d / 2; r = Math.min(r, hw, hd);
+  const cs = [[hw - r, hd - r, 0], [-hw + r, hd - r, Math.PI / 2], [-hw + r, -hd + r, Math.PI], [hw - r, -hd + r, 1.5 * Math.PI]];
+  for (const [cx, cz, a0] of cs) for (let i = 0; i <= n; i++) { const a = a0 + (i / n) * Math.PI / 2; pts.push([cx + r * Math.cos(a), cz + r * Math.sin(a)]); }
+  pts.push([...pts[0]]); // close the loop
+  return pts;
+}
+function cap(W, D, opts) {
+  const H = opts.h, ix = opts.taperX, izF = opts.taperFront, izB = opts.taperBack, rb = opts.rBottom, rt = opts.rTop;
+  const N = rrect(1, 1, .1).length;
+  const ts = [0, .15, .35, .55, .72, .84, .92, .965, 1];
+  const rings = [];
+  for (const t of ts) {
+    // fillet near the top edge: extra inset following a quarter circle
+    const f = Math.max(0, (t - .86) / .14); const fil = (1 - Math.sqrt(1 - f * f)) * opts.fillet;
+    const e = Math.pow(t, 0.85);
+    const w = W - 2 * (ix * e + fil), dF = izF * e + fil, dB = izB * e + fil;
+    const d = D - dF - dB, zoff = (dB - dF) / 2;
+    const r = rb + (rt - rb) * t;
+    const y = H * Math.min(t, .97) + (t > .97 ? (t - .97) / .03 * H * .03 * (1 - f * .3) : 0);
+    rings.push(rrect(w, d, r).map(([x, z]) => [x, y, z + zoff]));
+  }
+  const pos = [], uv = [], idx = [];
+  // walls
+  for (let j = 0; j < rings.length; j++) for (let i = 0; i < N; i++) { const p = rings[j][i]; pos.push(...p); uv.push(i / (N - 1), j / (rings.length - 1)); }
+  for (let j = 0; j < rings.length - 1; j++) for (let i = 0; i < N - 1; i++) {
+    const a = j * N + i, b = a + 1, c = a + N, d = c + 1; idx.push(a, c, b, b, c, d);
+  }
+  const wallCount = idx.length;
+  // top surface with cylindrical dish
+  const top = rings[rings.length - 1]; const base = pos.length / 3;
+  const topY = top[0][1]; let cx = 0, cz = 0; top.forEach(p => { cx += p[0]; cz += p[2]; }); cx /= N; cz /= N;
+  const hw = Math.max(...top.map(p => Math.abs(p[0] - cx)));
+  const hd = Math.max(...top.map(p => Math.abs(p[2] - cz)));
+  const S = [1, .92, .8, .65, .5, .35, .2, .08, 0];
+  for (const s of S) for (let i = 0; i < N; i++) {
+    const x = cx + (top[i][0] - cx) * s, z = cz + (top[i][2] - cz) * s;
+    const nx = (x - cx) / hw; const dish = opts.dish * (1 - nx * nx) * (s < 1 ? 1 : 0);
+    pos.push(x, topY - dish, z); uv.push((x - cx) / (2 * hw) + .5, .5 - (z - cz) / (2 * hd));
+  }
+  for (let j = 0; j < S.length - 1; j++) for (let i = 0; i < N - 1; i++) {
+    const a = base + j * N + i, b = a + 1, c = a + N, d = c + 1; idx.push(a, c, b, b, c, d);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+  g.setIndex(idx); g.computeVertexNormals();
+  g.addGroup(0, wallCount, 0); g.addGroup(wallCount, idx.length - wallCount, 1);
+  return { g, topInfo: { cx, cz, hw, hd, topY }, rings };
+}
+
+/* ---------- textures ---------- */
+async function svgImage(svg, color) {
+  const s = svg.replace(/currentColor/g, color).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" ');
+  const img = new Image(); img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s); await img.decode(); return img;
+}
+function noiseCanvas(size, base, amt) {
+  const c = document.createElement('canvas'); c.width = c.height = size; const x = c.getContext('2d');
+  const id = x.createImageData(size, size);
+  for (let i = 0; i < id.data.length; i += 4) { const v = base + (Math.random() - .5) * amt; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; }
+  x.putImageData(id, 0, 0); return c;
+}
+async function topTexture(face, ink, iconSvg, label, wide, aspect) {
+  const H = 1024, Wd = Math.round(H * aspect); const c = document.createElement('canvas'); c.width = Wd; c.height = H; const x = c.getContext('2d');
+  x.fillStyle = face; x.fillRect(0, 0, Wd, H);
+  if (wide) {
+    const img = await svgImage(iconSvg, ink); const s = H * .42; x.drawImage(img, Wd * .07, (H - s) / 2, s, s);
+    x.fillStyle = ink; x.font = `600 ${H * .3}px B`; x.textAlign = 'right'; x.textBaseline = 'middle'; x.fillText(label, Wd * .93, H * .52);
+  } else if (iconSvg) {
+    const img = await svgImage(iconSvg, ink); const s = Math.min(Wd, H) * (label ? .42 : .5);
+    x.drawImage(img, (Wd - s) / 2, label ? H * .17 : (H - s) / 2, s, s);
+    if (label) {
+      x.globalAlpha = .92; x.fillStyle = ink; let fs = H * .15; x.font = `600 ${fs}px B`;
+      while (x.measureText(label).width > Wd * .84 && fs > 40) { fs -= 4; x.font = `600 ${fs}px B`; }
+      x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.fillText(label, Wd / 2, H * .84); x.globalAlpha = 1;
+    }
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+function wallTexture(face, legend, label, N) {
+  // wall uv: u runs around the perimeter starting front-right; front face is near u in [~0.75 .. 1] / [0 .. 0.0]? -> we draw by sampling
+  const c = document.createElement('canvas'); c.width = 4096; c.height = 512; const x = c.getContext('2d');
+  x.fillStyle = face; x.fillRect(0, 0, c.width, c.height);
+  return { c, x, t: null };
+}
+
+/* ---------- render one key ---------- */
+window.renderKey = async (k) => {
+  const opts = { h: k.h, taperX: k.taperX, taperFront: k.taperF, taperBack: k.taperB, rBottom: k.rb, rTop: k.rt, fillet: .7, dish: k.dish };
+  const { g, topInfo, rings } = cap(k.W, k.D, opts);
+  const rough = new THREE.CanvasTexture(noiseCanvas(256, 150, 60)); rough.wrapS = rough.wrapT = THREE.RepeatWrapping; rough.repeat.set(3, 3);
+  const bump = new THREE.CanvasTexture(noiseCanvas(512, 128, 255)); bump.wrapS = bump.wrapT = THREE.RepeatWrapping; bump.repeat.set(2, 2);
+  const common = { roughness: P.roughness, roughnessMap: rough, bumpMap: bump, bumpScale: P.bump, metalness: 0, sheen: P.sheen, sheenRoughness: .8, sheenColor: new THREE.Color(0xffffff), clearcoat: P.clearcoat, clearcoatRoughness: .6, ior: 1.5, specularIntensity: P.spec };
+  const topTex = await topTexture(k.face, k.ink, k.icon, k.topLabel, k.wide, topInfo.hw / topInfo.hd);
+  const wallMat = new THREE.MeshPhysicalMaterial({ color: new THREE.Color(k.face), ...common });
+  const topMat = new THREE.MeshPhysicalMaterial({ map: topTex, ...common });
+  const mesh = new THREE.Mesh(g, [wallMat, topMat]); scene.add(mesh);
+
+  // front-wall legend: a decal plane laid on the sloped front wall
+  let decal;
+  if (k.frontLabel) {
+    const fr0 = rings[0], frT = rings[rings.length - 3];
+    const zb = Math.max(...fr0.map(p => p[2])), zt = Math.max(...frT.map(p => p[2])), yt = frT[0][1];
+    const c = document.createElement('canvas'); c.width = 1024; c.height = 256; const x = c.getContext('2d');
+    x.fillStyle = k.legend; x.font = `600 ${k.small ? 130 : 120}px B`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(k.frontLabel, 512, 132);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+    const wallW = k.W * .78, wallH = Math.hypot(zb - zt, yt) * .62;
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(wallW, wallW / 4), new THREE.MeshPhysicalMaterial({ map: tex, transparent: true, ...common, polygonOffset: true, polygonOffsetFactor: -4 }));
+    const ang = Math.atan2(zb - zt, yt); // wall slope
+    pl.position.set(0, yt * .42, zb - (zb - zt) * .42 + .02);
+    pl.rotation.x = -ang;
+    if (wallW / 4 > wallH) pl.scale.setScalar(wallH / (wallW / 4));
+    scene.add(pl); decal = pl;
+  }
+
+  // camera: looks down at the cap from the front at `elev` degrees
+  const cam = new THREE.PerspectiveCamera(P.fov, 1, 1, 2000);
+  const el = THREE.MathUtils.degToRad(P.elev), dist = P.dist;
+  cam.position.set(0, Math.sin(el) * dist + k.h * .4, Math.cos(el) * dist); cam.lookAt(0, k.h * .4, 0); cam.updateMatrixWorld();
+  // fit: project the footprint corners + top to find bounds, then crop with a view offset
+  const box = new THREE.Box3().setFromObject(mesh); const pts = [];
+  for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) pts.push(new THREE.Vector3(x, y, z).project(cam));
+  const minX = Math.min(...pts.map(p => p.x)), maxX = Math.max(...pts.map(p => p.x)), minY = Math.min(...pts.map(p => p.y)), maxY = Math.max(...pts.map(p => p.y));
+  const pad = .02; const spanX = maxX - minX + pad * 2, spanY = maxY - minY + pad * 2;
+  const pxW = k.px, pxH = Math.round(k.px * (spanY / spanX));
+  renderer.setSize(pxW, pxH, false);
+  const fullW = pxW * 2 / spanX, fullH = pxH * 2 / spanY;
+  cam.aspect = fullW / fullH; cam.updateProjectionMatrix();
+  // recompute with new aspect
+  const pts2 = []; for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y]) for (const z of [box.min.z, box.max.z]) pts2.push(new THREE.Vector3(x, y, z).project(cam));
+  const a = Math.min(...pts2.map(p => p.x)) - pad, b = Math.max(...pts2.map(p => p.y)) + pad;
+  const offX = (a + 1) / 2 * fullW, offY = (1 - b) / 2 * fullH;
+  cam.setViewOffset(fullW, fullH, offX, offY, pxW, pxH); cam.updateProjectionMatrix();
+  renderer.render(scene, cam);
+  const url = renderer.domElement.toDataURL('image/png');
+  // where is the footprint bottom edge / top surface in the image (for overlay alignment)
+  scene.remove(mesh); if (decal) scene.remove(decal);
+  return { url, w: pxW, h: pxH };
+};
+window.ready = true;
+</script></body></html>
